@@ -1,0 +1,416 @@
+% !TeX document-id = {4fba684d-7122-40d6-bb19-80adba5d32d5}
+%!TeX TXS-program:compile = txs:///xelatex/
+\documentclass{beamer}
+\usetheme{Darmstadt}
+
+\newif\ifproposal
+\proposalfalse
+
+\usepackage{CJKutf8}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1, T2A]{fontenc}
+\usepackage{fontspec}
+\setmainfont[ItalicFont={*},ItalicFeatures={FakeSlant=.167}]{D2Coding}
+
+\usepackage{braket}
+\newcommand{\iu}{{i\mkern1mu}}
+
+% based on the original definitions in beamerbasenavigation.sty
+\makeatletter
+\def\sectionentry#1#2#3#4#5{% section number, section title, page
+	%
+	\newcount\mymin%
+	\mymin=3
+	\ifnum\c@section=1%
+	\mymin=5
+	\fi%
+	\ifnum\c@section=2%
+	\mymin=4
+	\fi%
+	%
+	\newcount\mymax%
+	\mymax=3
+	\ifnum\c@section=\beamer@sectionmax%
+	\mymax=5
+	\fi%
+	\ifnum\c@section=\numexpr\beamer@sectionmax-1%
+	\mymax=4
+	\fi%
+	%
+	\ifnum\numexpr\c@section-#1<\mymax%
+	\ifnum\numexpr#1-\c@section<\mymin%
+	\ifnum#5=\c@part%
+	\beamer@section@set@min@width
+	\box\beamer@sectionbox\hskip1.875ex plus 1fill%
+	\beamer@xpos=0\relax%
+	\beamer@ypos=1\relax%
+	\setbox\beamer@sectionbox=
+	\hbox{
+		\def\insertsectionhead{#2}%
+		\def\insertsectionheadnumber{#1}%
+		\def\insertpartheadnumber{#5}%
+		
+		{%
+			\usebeamerfont{section in head/foot}\usebeamercolor[fg]{section in head/foot}%
+			\ifnum\c@section=#1%
+			\hyperlink{Navigation#3}{{\usebeamertemplate{section in head/foot}}}%
+			\else%
+			\hyperlink{Navigation#3}{{\usebeamertemplate{section in head/foot shaded}}}%
+			\fi%    
+		}%
+	}%
+	\ht\beamer@sectionbox=1.875ex%
+	\dp\beamer@sectionbox=0.75ex%
+	\fi%
+	\fi%
+	\fi%
+	\ignorespaces%
+}
+
+\def\slideentry#1#2#3#4#5#6{%
+	%section number, subsection number, slide number, first/last frame, page number, part number
+	%
+	\newcount\mymin%
+	\mymin=3
+	\ifnum\c@section=1%
+	\mymin=5
+	\fi%
+	\ifnum\c@section=2%
+	\mymin=4
+	\fi%
+	%
+	\newcount\mymax%
+	\mymax=3
+	\ifnum\c@section=\beamer@sectionmax%
+	\mymax=5
+	\fi%
+	\ifnum\c@section=\numexpr\beamer@sectionmax-1%
+	\mymax=4
+	\fi%
+	%
+	\ifnum\numexpr\c@section-#1<\mymax%
+	\ifnum\numexpr#1-\c@section<\mymin%
+	\ifnum#6=\c@part\ifnum#2>0\ifnum#3>0%
+	\ifbeamer@compress%
+	\advance\beamer@xpos by1\relax%
+	\else%
+	\beamer@xpos=#3\relax%
+	\beamer@ypos=#2\relax%
+	\fi%
+	\hbox to 0pt{%
+		\beamer@tempdim=-\beamer@vboxoffset%
+		\advance\beamer@tempdim by-\beamer@boxsize%
+		\multiply\beamer@tempdim by\beamer@ypos%
+		\advance\beamer@tempdim by -.05cm%
+		\raise\beamer@tempdim\hbox{%
+			\beamer@tempdim=\beamer@boxsize%
+			\multiply\beamer@tempdim by\beamer@xpos%
+			\advance\beamer@tempdim by -\beamer@boxsize%
+			\advance\beamer@tempdim by 1pt%
+			\kern\beamer@tempdim
+			\global\beamer@section@min@dim\beamer@tempdim
+			\hbox{\beamer@link(#4){%
+					\usebeamerfont{mini frame}%
+					\ifnum\c@section=#1%
+					\ifnum\c@subsection=#2%
+					\usebeamercolor[fg]{mini frame}%
+					\ifnum\c@subsectionslide=#3%
+					\usebeamertemplate{mini frame}%\beamer@minislidehilight%
+					\else%
+					\usebeamertemplate{mini frame in current subsection}%\beamer@minisliderowhilight%
+					\fi%
+					\else%
+					\usebeamercolor{mini frame}%
+					%\color{fg!50!bg}%
+					\usebeamertemplate{mini frame in other subsection}%\beamer@minislide%
+					\fi%
+					\else%
+					\usebeamercolor{mini frame}%
+					%\color{fg!50!bg}%
+					\usebeamertemplate{mini frame in other subsection}%\beamer@minislide%
+					\fi%
+		}}}\hskip-10cm plus 1fil%
+	}\fi\fi%
+	\else%
+	\fakeslideentry{#1}{#2}{#3}{#4}{#5}{#6}%
+	\fi%
+	\fi%
+	\fi%
+	\ignorespaces%
+}
+\makeatother
+
+\AtBeginSection[]{
+	\begin{frame}
+		\vfill
+		\centering
+		\begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+			\usebeamerfont{title}\insertsectionhead\par%
+		\end{beamercolorbox}
+		\vfill
+	\end{frame}
+}
+
+\title{Quantum Speedup on Exhaustive-search Attacks on Cryptosystems}
+\subtitle{Week 7 Report for Class 75}
+
+\author{2017320009 Sangheon Lee\\ 2017320023 Mingyu Cho}
+
+\date{\today}
+
+\begin{document}
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Table of Contents}
+		\tableofcontents
+	\end{frame}
+	
+	\ifproposal
+	\section{Necessity}
+	
+	\begin{frame}
+		\frametitle{Necessity}
+		
+		\begin{itemize}
+			\item ``Quantum Supremacy" imminent
+			\item Post-quantum stage makes most cryptosystems used nowadays unsafe
+			\begin{itemize}
+				\item Prime factorization broken by Shor's Algorithm
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	
+	\section{Content}
+	
+	\begin{frame}
+		\frametitle{Content}
+		
+		\begin{itemize}
+			\item Targeting symmetric-key cryptosystem
+			\begin{itemize}
+				\item Specifically, DES will be used.
+				\item If possible, make it able to be modified for any symmetric-key cryptosystems.
+			\end{itemize}
+			\item Brute-force exhaustive key search quantum algorithm
+		\end{itemize}
+	\end{frame}
+	
+	\section{Methods}
+	
+	\begin{frame}
+		\frametitle{Methods}
+		\begin{itemize}
+			\item Modify Grover's Algorithm to crack DES
+			\begin{itemize}
+				\item $\Omega(\sqrt{n})$ search algorithm for a data table of $n$
+			\end{itemize}
+			\item Optionally, simulate it using projectq, a python-based quantum simulator
+			\item Computationally determine and verify expected run-time, compare with existing attacks.
+			\item Speed up if possible and/or necessary
+		\end{itemize}
+	\end{frame}
+	
+	\section{Expectations}
+	
+	\begin{frame}
+		\frametitle{Expectations}
+		
+		\begin{itemize}
+			\item The quantum algorithm will prove to be faster than at least the traditional brute-force exhaustive search.
+			\item Planning to contrast two methods using the length of the key as a fixed variable if the algorithm is modifiable to others.
+		\end{itemize}
+	\end{frame}
+	
+	\section{Requirements}
+	
+	\begin{frame}
+		\frametitle{Requirements}
+		
+		\begin{itemize}
+			\item Papers and/or textbooks on quantum computation
+			\item Help from Prof. Hong(He suggested the topic)
+			\item[]
+			\item Currently working with Sangheon Lee to study the backgrounds
+			\item Agreed to study together before parting ways
+		\end{itemize}
+	\end{frame}
+	\fi
+	
+	\section{Backgrounds}
+	
+	\begin{frame}
+		\frametitle{Mathematical Backgrounds}
+		\begin{itemize}
+			\item Complex numbers
+			\begin{itemize}
+				\item Complex plane $a+b\iu=(a,b)$
+				\item Complex polar $\rho e^{\phi \iu}=\rho \cos \phi + \rho \sin \phi \iu$
+			\end{itemize}
+			\item 2-dimensional Hilbert space
+			\begin{itemize}
+				\item A complex vector space, utilizing conjugate transposes.
+				\item When constricted to $\mathbb{R}$, same as $\mathbb{R}^2$ vector space.
+			\end{itemize}
+			\item Most of the time on Week 4 was spent on understanding the mathematical backgrounds on 2-dimensional Hilbert spaces and special matrices which can only be considered on $\mathbb{C}$.
+			\item Additionally, analyzing Grover's Algorithm implementation in Microsoft Q\# was done.
+		\end{itemize}
+	\end{frame}
+	
+	\section{Qubits}
+	\begin{frame}
+		\frametitle{Qubits}
+		\begin{itemize}
+			\item Quantum Bit(Qubit for short) is a probabilistic vector of information.
+			\item $\ket{0}=\begin{pmatrix} 1 \\ 0 \end{pmatrix}$, $\ket{1}=\begin{pmatrix} 0 \\ 1 \end{pmatrix}$
+			\item A general qubit is represented as $u=\alpha \ket{0}+\beta \ket{1}$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Three Main Types of Operation}
+		\begin{itemize}
+			\item Creation
+			\item Reversible Operation
+			\item Measurement
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Creation}
+		\begin{itemize}
+			\item As simple as creating $\ket{0}$ or $\ket{1}$.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Reversible Operation}
+		\begin{itemize}
+			\item Represented using unitary matrix
+			\begin{itemize}
+				\item $U^*U=UU^*=I$, where $U^*$ is a conjugate transpose of $U$
+			\end{itemize}
+			\item Two frequently used operations
+			\begin{itemize}
+				\item X-gate $X=\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ (so-called NOT gate)
+				\item Hadamard Gate $H=\dfrac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$
+				\item Hadamard Gate creates a Quantum Superposition
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Measurement}
+		\begin{itemize}
+			\item A non-deterministic(probabilistic) measure of a qubit $u$.
+			\item For a vector $u=\begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ where $\|u\|=1$
+			\begin{itemize}
+				\item returns "true" with probability $\|\alpha\|^2$, and $u$ becomes $\ket{0}$
+				\item returns "false" with probability $\|\beta\|^2$, and $u$ becomes $\ket{1}$
+			\end{itemize}
+			\item Destroys quantum superposition; often called "destructive".
+		\end{itemize}
+	\end{frame}
+	
+	\section{Grover's Algorithm}
+	
+	\begin{frame}{Overview}
+		\begin{itemize}
+			\item Grover's algorithm can find a specific state satisfying some condition among $ N = 2^n$ candidates in $ O(\sqrt{N}) $ time, compared to classical runtime complexity $ O(N) $.
+			\item Grover's algorithm exploits qualities of quantum amplitudes to gain advantage of probability seperation.
+			\item It can brute-force 128-bit symmetric cryptographic key in roughly $ 2^{64} $ iterations.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Algorithm}
+		Input:
+		\begin{itemize}
+			\item A quantum oracle $ \mathcal{O} $ which performs the operation $ \mathcal{O} \ket{x}  = (-1)^{f(x)} \ket{x}$, where $ f(x) = 0 $ for all $0 \leq x < 2^n $ except $ x_0 $, for which $ f(x_0) = 1 $.
+			\begin{itemize}
+				\item Such quantum oracle is viable, and takes $ O(1) $ time.
+			\end{itemize}
+			\item $ n $ qubits initialized to the state $ \ket{0} $
+		\end{itemize}
+		Output: $ x_0 $, in runtime $ O(\sqrt{2^n}) $ with error rate $ O(\frac{1}{2^n}) $
+	\end{frame}
+	
+	\begin{frame}{Algorithm}
+		Procedure:
+		\begin{enumerate}
+			\item $ \ket{0}^{\otimes n} $ (initial state)
+			\item $ H^{\otimes n} \ket{0}^{\otimes n} = \dfrac{1}{\sqrt{2^n}} \sum\limits_{x=0}^{2^n-1}\ket{x} = \ket{\psi}$ (Hadamard transform)
+			\item $ [(2 \ket{\psi} \bra{\psi} - I) \mathcal{O}]^R \ket{\psi} \approx \ket{x_0}  $ (Grover iteration for $ R \approx  \frac{\pi}{4}\sqrt{2^n} $ times)
+			\item $ x_0 $ (measure)
+		\end{enumerate}
+		Grover iteration in a nutshell: negate the amplitude of the desired state, followed by `diffusion transform' which increases the amplitude of the desired state and lower the others.
+	\end{frame}
+	
+	\section{Quantum S-DES Oracle}
+	
+	\begin{frame}{S-DES}
+		\begin{itemize}
+			\item Simplified DES with 2 rounds
+			\item Structure similar to DES but simplified with 10-bit key and 8-bit plaintext.
+			\item Quantum oracle needs to be reversible, of which S-DES is (normally) not.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Quantumizing S-DES}
+		\begin{itemize}
+			\item Most parts are permutations or compressions; no problems here.
+			\item Two parts poses a challenge:
+		\end{itemize}
+		\begin{enumerate}
+			\item S-Boxes
+			\begin{itemize}
+				\item Consists of lookup table: not ideal for our situation.
+				\item Currently working on breaking it down to fundamental and/or/not-gates
+				\begin{itemize}
+					\item Possibly change up the set of gates?
+					\item Possibly automate generation on S-Boxes on actual DES?
+				\end{itemize}
+				\item Classic gates are not reversible; use CNOT/CCNOT gates to make them reversible.
+			\end{itemize}
+			\item Expansion
+			\begin{itemize}
+				\item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
+				\item Currently looking for a workaround; i.e. partially using classic bits or use 0-initialized qubits and XOR operation.
+				\item Increasing the number of qubits is a final resort.
+			\end{itemize}
+		\end{enumerate}
+	\end{frame}
+	
+	\section{Current Works and Future Plans}
+	
+	\begin{frame}
+		\frametitle{Work in Progress(Mingyu Cho)}
+		\begin{itemize}
+			\item Read \href{https://arxiv.org/pdf/1512.04965.pdf}{a paper on AES quantum oracle}
+			\item Basic Assumption: a valid encryption pair(of 1-block length) is given, and the target is to gain the key.
+			\item Broken S-DES down to its fundamentals; working on conversion to quantum.
+			\item Implement a non-quantum S-DES for testing the quantum version(once completed).
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Work in Progress(Sangheon Lee)}
+		\begin{itemize}
+			\item TODO
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Future Plans}
+		\begin{itemize}
+			%\item Dig in deeper on the backgrounds, if necessary.
+			%\item Understand Grover's Algorithm and other quantum algorithms to know how to utilize it.
+			%\item Update sample code of Grover's Algorithm by implementing oracle function and randomization.
+			%\item Possibly utilize IBM Quantum Experience?
+			%\item Search some more sample codes (not sure if implementing and debugging Shor's and QFT is necessary).
+			\item Construct and test S-DES and apply Grover's.
+		\end{itemize}
+	\end{frame}
+\end{document}
