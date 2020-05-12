@@ -378,6 +378,22 @@
 		\end{enumerate}
 	\end{frame}
 	
+	\begin{frame}{Quantum S-DES Implementation}
+		\begin{itemize}
+			\item S-DES implementation done except S-Box
+            \begin{itemize}
+                \item Not validated yet
+                \item Other parts were easily done with the aid of Microsoft Q\# Library
+            \end{itemize}
+            \item By introducing ancilla bits (which are only used within each round), detouring No-cloning theorem was possible
+            \item Applying Grover's Algorithm would not be a problem (except for speed)
+            \item Took 20 seconds of running time for a single iteration of S-DES, which was slower than expected
+            \begin{itemize}
+                \item Constructing efficient circuit would be grateful
+            \end{itemize}
+		\end{itemize}
+	\end{frame}
+    
 	\section{Current Works and Future Plans}
 	
 	\begin{frame}
@@ -387,6 +403,9 @@
 			\item Basic Assumption: a valid encryption pair(of 1-block length) is given, and the target is to gain the key.
 			\item Theoretical Quantum conversion of S-DES completed.
 			\item Implementing a non-quantum S-DES for testing the quantum version.
+            \begin{itemize}
+                \item Circuits composes of and/or/not causes numerous ancilla bits; re-converting to not/xor.
+            \end{itemize}
 			\item Waiting for the code for analysis.
 		\end{itemize}
 	\end{frame}
@@ -394,10 +413,9 @@
 	\begin{frame}
 		\frametitle{Work in Progress(Sangheon Lee)}
 		\begin{itemize}
-            \item Still learning Microsoft Q\# syntax such as (implicit) closure
-			\item Learn how to construct an oracle in Grover's (by phase kickback trick)
-            \item Devise classic logical gates(AND, OR, XOR) in quantum computing via CCNOT gate (a.k.a Toffoli gate)
-            \item Understand S-DES fundamentals
+            \item Implementing S-DES S-Box
+            \item Constructing test vectors
+			\item Possibly reduce some quantum gates
 		\end{itemize}
 	\end{frame}
 	
