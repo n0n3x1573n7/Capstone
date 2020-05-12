@@ -13,6 +13,8 @@
 \usepackage{fontspec}
 \setmainfont[ItalicFont={*},ItalicFeatures={FakeSlant=.167}]{D2Coding}
 
+\usepackage[normalem]{ulem}
+
 \usepackage{braket}
 \newcommand{\iu}{{i\mkern1mu}}
 
@@ -367,8 +369,10 @@
 			\item S-Boxes
 			\begin{itemize}
 				\item Consists of lookup table: not ideal for our situation.
-				\item Broken the S-Boxes into fundamental and/or/not-gates
+				\item \sout{Broken the S-Boxes into fundamental and/or/not-gates}
+				\item Actually, the brute-force method(of checking each cases) enables reusage of ancilla bits, thereby reducing the number of required qubits!
 				\item Classic gates are not reversible; use CNOT/CCNOT gates to make them reversible.
+				
 			\end{itemize}
 			\item Expansion
 			\begin{itemize}
