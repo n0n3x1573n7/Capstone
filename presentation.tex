@@ -367,18 +367,13 @@
 			\item S-Boxes
 			\begin{itemize}
 				\item Consists of lookup table: not ideal for our situation.
-				\item Currently working on breaking it down to fundamental and/or/not-gates
-				\begin{itemize}
-					\item Possibly change up the set of gates?
-					\item Possibly automate generation on S-Boxes on actual DES?
-				\end{itemize}
+				\item Broken the S-Boxes into fundamental and/or/not-gates
 				\item Classic gates are not reversible; use CNOT/CCNOT gates to make them reversible.
 			\end{itemize}
 			\item Expansion
 			\begin{itemize}
 				\item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
-				\item Currently looking for a workaround; i.e. partially using classic bits or use 0-initialized qubits and XOR operation.
-				\item Increasing the number of qubits(i.e. using Ancilla Bits) is a final resort.
+				\item Use XOR operation to copy the information.
 			\end{itemize}
 		\end{enumerate}
 	\end{frame}
@@ -390,8 +385,9 @@
 		\begin{itemize}
 			\item Read \href{https://arxiv.org/pdf/1512.04965.pdf}{a paper on AES quantum oracle}
 			\item Basic Assumption: a valid encryption pair(of 1-block length) is given, and the target is to gain the key.
-			\item Broken S-DES down to its fundamentals; working on conversion to quantum.
-			\item Implement a non-quantum S-DES for testing the quantum version(once completed).
+			\item Theoretical Quantum conversion of S-DES completed.
+			\item Implementing a non-quantum S-DES for testing the quantum version.
+			\item Waiting for the code for analysis.
 		\end{itemize}
 	\end{frame}
 	
