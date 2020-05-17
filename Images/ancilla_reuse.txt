@@ -1,0 +1,13 @@
+A AND B implemented with CCNOT gate(CCX) and 1 ancilla
+
+b1 b2 b3 b4
+
+out=(b1=t1 CCX b2=t2 CCX b3=t3 CCX b4=t4) XOR out
+            |         |         |
+         0->an1    0->an2    0->an3
+            |         |         |
+         an1->0    an2->0    an3->0        
+            |         |         |
+     b1=t1 CCX b2=t2 CCX b3=t3 CCX b4=t4
+
+
