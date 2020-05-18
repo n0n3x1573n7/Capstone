@@ -260,10 +260,10 @@ namespace Quantum.QSharpSimpleDES {
             
             PerformSDES(plaintext, cipher, Most(qq), Tail(qq));
             let res = M(Tail(qq));
-            let plaintext_str = 
+            
             Message($"[+] Plaintext: {plaintext}");
             Message($"[+] Cipher   : {cipher}");
-            Message("[+] Key      : {key}");
+            Message($"[+] Key      : {key}");
             Message($"[+] Result   : {res}");
             ApplyToEach(Reset, qq);
         }
