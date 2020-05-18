@@ -390,22 +390,79 @@
 			\end{itemize}
 		\end{enumerate}
 	\end{frame}
-	
-	\begin{frame}{Quantum S-DES Implementation}
-		\begin{itemize}
-			\item S-DES implementation done except S-Box
+    
+    \section{Quantum S-DES Implementation}
+    
+   	\begin{frame}{S-DES Obstacles}
+   		\begin{itemize}
+            \item Expansion : Directly clone with XOR twice
             \begin{itemize}
-                \item Not validated yet
-                \item Other parts were easily done with the aid of Microsoft Q\# Library
+                \item With extra 8 qubits, we can explicitly use expanded plaintext
             \end{itemize}
-            \item By introducing ancilla bits (which are only used within each round), detouring No-cloning theorem was possible
-            \item Applying Grover's Algorithm would not be a problem (except for speed)
-            \item Took 20 seconds of running time for a single iteration of S-DES, which was slower than expected
+            \item S-Box : Passing all the candidates
             \begin{itemize}
-                \item Constructing efficient circuit would be grateful
+                \item Denote S-Box function as $ f : \{0,1\}^4 \to \{0,1\}^2 $
+                \item If the dealing plaintext has a basis for $ x \in \{0, 1\}^4 $, apply XOR(NOT) to result S-Box qubit
             \end{itemize}
-		\end{itemize}
-	\end{frame}
+   		\end{itemize}
+   	\end{frame}  
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        Initially, 34 explicit qubits were used in total.
+   		\begin{itemize}
+            \item 10 qubits for input key
+            \item 1 qubit for making an encryption oracle
+            \item 8 qubits for (intermediate) plaintext
+            \item 8 qubits for expanded plaintext
+            \item 4 qubits for storing S-Box result
+            \item 3 qubit for S-Box ancilla
+   		\end{itemize}
+        Will it run?
+   	\end{frame}
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        Yes, and no.
+   		\begin{figure}[h]
+            \centering
+            \includegraphics[height=0.5\textheight]{./Images/Qsharp-SDES-memory-error-2.png}
+        \end{figure}
+        After allocating 48GB of RAM, \texttt{System.Runtime.InteropServices.SEHException} was raised, indicating an out-of-memory error.
+   	\end{frame}
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        Reducing the number of qubits was necessary...!
+        \begin{itemize}
+            \item 10 qubits for input key
+            \item 1 qubit for making an encryption oracle
+            \item 8 qubits for (intermediate) plaintext
+            \item \only<1>{8 qubits for expanded plaintext} \only<2->{{\color{gray}\sout{8 qubits for expanded plaintext}}}
+            \item \only<1-2>{4}\only<3>{{\color{gray}\sout{4}} 2} qubits for storing S-Box result
+            \item 3 qubit for S-Box ancilla
+        \end{itemize}
+   		\onslide<2-> We can directly use plaintext qubits to create result qubits from S-Box. After then we can undo all the operations (permutation, \textit{etc.}) which altered plaintext.
+           
+        \onslide<3>Additionally, each S-Box operation is independent. Thus we can reuse S-box result qubits after re-initialization.
+   	\end{frame} 
+       
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        After a bit of debugging and comparing with Python Implementation...
+        \only<1>{
+            \begin{figure}
+                \centering
+                \includegraphics[height=0.5\textheight]{./Images/Qsharp-SDES-24-qubits.png}
+            \end{figure}
+            It ran well within 40s (before the second optimization, it took 4x time and memory)
+        }
+        \only<2>{
+            \begin{figure}
+                \centering
+                \includegraphics[height=0.5\textheight]{./Images/Qsharp-SDES-res.png}
+            \end{figure}
+            Expected cipher matched with Python S-DES implementation output.
+        }
+   	\end{frame} 
+     
     
 	\section{Current Works and Future Plans}
 	
