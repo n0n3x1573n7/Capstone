@@ -469,21 +469,18 @@
 	\begin{frame}
 		\frametitle{Work in Progress(Mingyu Cho)}
 		\begin{itemize}
-			\item Read \href{https://arxiv.org/pdf/1512.04965.pdf}{a paper on AES quantum oracle}
-			\item Basic Assumption: a valid encryption pair(of 1-block length) is given, and the target is to gain the key.
-			\item Theoretical Quantum conversion of S-DES completed.
-			\item Implementing a non-quantum S-DES for testing the quantum version.
-            \begin{itemize}
-                \item Circuits composes of and/or/not causes numerous ancilla bits; re-converting to not/xor.
-            \end{itemize}
-			\item Waiting for the code for analysis.
+			\item Implemented a non-quantum S-DES(in python) for testing the quantum version.
+			\item Optionally implement Brute-force attack on S-DES?
+			\item Started preliminary analysis on the gate applications
+			\item Looking for possible speedups on the quantum side to aid the simulation
 		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Work in Progress(Sangheon Lee)}
 		\begin{itemize}
-            \item Implementing S-DES S-Box
+            \item Implementation of S-DES completed
+            \item Plan to work on Grover
             \item Constructing test vectors
 			\item Possibly reduce some quantum gates
 		\end{itemize}
