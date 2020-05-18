@@ -7,7 +7,7 @@ namespace Quantum.QSharpSimpleDES {
     open Microsoft.Quantum.Diagnostics;
     open Microsoft.Quantum.Intrinsic;
     open Microsoft.Quantum.Measurement;
-
+    
     /// # Summary
     /// Generates a subkey by left shifting a 10-qubit key.
     ///
@@ -49,7 +49,7 @@ namespace Quantum.QSharpSimpleDES {
                         X(EP[index]);
                     }
                 }
-                CCNOT(EP[0], EP[1], ancilla[0]);
+                CCNOT(EP[0], EP[1], ancilla[0]);       
                 CCNOT(EP[2], ancilla[0], ancilla[1]);
                 CCNOT(EP[3], ancilla[1], ancilla[2]);
             }
@@ -107,10 +107,10 @@ namespace Quantum.QSharpSimpleDES {
     /// 8-qubit subkey for this round.
     operation ApplyRound(P : Qubit[], subkey : Qubit[]) : Unit {
         // qubits for the result of S-Box
-        using (qubits = Qubit[4]) {
+        using (qubits = Qubit[2]) {
             let EP_arr1 = [1,2,3,0];    //[4,1,2,3];
             let EP_arr2 = [3,0,1,2];    //[2,3,4,1];
-            let P4      = [3,0,2,1];     //[2,4,3,1];
+            let P4      = [3,0,2,1];    //[2,4,3,1];
 
             // Calculate qubit[0..1]
             within {
@@ -120,8 +120,14 @@ namespace Quantum.QSharpSimpleDES {
                 }
             }
             apply {
-                SBox0Apply(P[4..7], qubits[0..1]);
+                SBox0Apply(P[4..7], qubits);
             }
+
+            for(index in 0..1) {
+                CNOT(qubits[index], P[P4[index]]);
+                Reset(qubits[index]);
+            }
+            
 
             // Calculate qubit[2..3]
             within {
@@ -131,14 +137,11 @@ namespace Quantum.QSharpSimpleDES {
                 }
             }
             apply {
-                SBox1Apply(P[4..7], qubits[2..3]);
-            }
-            // permuate qubits
-            PermuteQubits(P4, qubits);
+                SBox1Apply(P[4..7], qubits);
+            }  
 
-            // XOR with P[0..3]
-            for(index in 0..3) {
-                CNOT(qubits[index], P[index]);
+            for(index in 0..1) {
+                CNOT(qubits[index], P[P4[index+2]]);
                 Reset(qubits[index]);
             }
         }
@@ -165,7 +168,7 @@ namespace Quantum.QSharpSimpleDES {
                     X(pqubits[index]);
                 }
             }
-
+            
             // Step 1-1.    Permute P with IP
             // [1,2,3,4,5,6,7,8] -> [2,6,3,1,4,8,5,7]
             // perm : [3,0,2,4,6,1,7,5]
@@ -190,9 +193,9 @@ namespace Quantum.QSharpSimpleDES {
             apply {
                 ApplyRound(pqubits, key[2..9]);
             }
-
+  
             Message("Round 1 finished");
-
+            
             // Step 3.      Swap nibbles of P
             PermuteQubits([4,5,6,7,0,1,2,3], pqubits);
 
@@ -215,8 +218,8 @@ namespace Quantum.QSharpSimpleDES {
             // [1,2,3,4,5,6,7,8] -> [4,1,3,5,7,2,8,6]
             // perm : [1,5,2,0,3,7,4,6]
             PermuteQubits([1,5,2,0,3,7,4,6], pqubits);
-
-
+        
+            
             // Microsoft BoolArr returns like [2^0, 2^1, ..., 2&6]
             // while our notation is [2^7, 2^6, ..., 2^0]
             PermuteQubits([7,6,5,4,3,2,1,0], pqubits);
@@ -227,7 +230,7 @@ namespace Quantum.QSharpSimpleDES {
             let res1 = ResultArrayAsInt(ForEach(MResetZ, pqubits));
             Message($"res1 : {res1}");
             let res = cipher == res1;
-
+            
             // Step 7-1.    Restore key qubits
             Adjoint GenerateSubkey(key);
             Adjoint GenerateSubkey(key);
@@ -239,7 +242,7 @@ namespace Quantum.QSharpSimpleDES {
             }
         }
     }
-
+    
     @EntryPoint()
     operation HelloQ () : Unit {
         Message("Hello quantum world!");
@@ -248,17 +251,19 @@ namespace Quantum.QSharpSimpleDES {
             let plaintext = 0b11000111;
             let cipher = 0b01101110;
             let key = 0b1110100110;
-
+            
             for(i in 0..9) {
                 if(And(key, 512 >>> i) != 0) {
                     X(qq[i]);
                 }
             }
-
+            
             PerformSDES(plaintext, cipher, Most(qq), Tail(qq));
             let res = M(Tail(qq));
+            let plaintext_str = 
             Message($"[+] Plaintext: {plaintext}");
             Message($"[+] Cipher   : {cipher}");
+            Message("[+] Key      : {key}");
             Message($"[+] Result   : {res}");
             ApplyToEach(Reset, qq);
         }
