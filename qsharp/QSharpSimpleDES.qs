@@ -1,4 +1,4 @@
-namespace Quantum.QSharpSimpleDES {
+﻿namespace Quantum.QSharpSimpleDES {
 
     open Microsoft.Quantum.Arrays;
     open Microsoft.Quantum.Bitwise;
@@ -6,6 +6,7 @@ namespace Quantum.QSharpSimpleDES {
     open Microsoft.Quantum.Convert;
     open Microsoft.Quantum.Diagnostics;
     open Microsoft.Quantum.Intrinsic;
+    open Microsoft.Quantum.Math;
     open Microsoft.Quantum.Measurement;
     
     /// # Summary
@@ -194,7 +195,7 @@ namespace Quantum.QSharpSimpleDES {
                 ApplyRound(pqubits, key[2..9]);
             }
   
-            Message("Round 1 finished");
+            // Message("Round 1 finished");
             
             // Step 3.      Swap nibbles of P
             PermuteQubits([4,5,6,7,0,1,2,3], pqubits);
@@ -212,7 +213,7 @@ namespace Quantum.QSharpSimpleDES {
                 ApplyRound(pqubits, key[2..9]);
             }
 
-            Message("Round 2 finished");
+            // Message("Round 2 finished");
 
             // Step 5.      Permute P with IP^{-1}
             // [1,2,3,4,5,6,7,8] -> [4,1,3,5,7,2,8,6]
@@ -228,7 +229,9 @@ namespace Quantum.QSharpSimpleDES {
             // Step 6-2.    Compare with cipher and set target qubit
             // Step 7-2.    Set P to zero-state
             let res1 = ResultArrayAsInt(ForEach(MResetZ, pqubits));
-            Message($"res1 : {res1}");
+            
+            Message($"    [@] S-DES result : {res1}");
+            
             let res = cipher == res1;
             
             // Step 7-1.    Restore key qubits
@@ -243,29 +246,72 @@ namespace Quantum.QSharpSimpleDES {
         }
     }
     
+    /// # Summary
+    /// Returns the number of Grover iterations needed to find a single marked
+    /// item, given the number of qubits in a register.
+    /// 
+    /// # Source
+    /// https://docs.microsoft.com/en-us/quantum/quickstarts/search
+    function NIterations(nQubits : Int) : Int {
+        let nItems = 1 <<< nQubits; // 2^numQubits
+        // compute number of iterations:
+        let angle = ArcSin(1. / Sqrt(IntAsDouble(nItems)));
+        let nIterations = Round(0.25 * PI() / angle - 0.5);
+        return nIterations;
+    }
+
+    operation EncryptSDES(plaintext : Int, cipher : Int, key : Int) : Bool {
+        mutable res = false;
+        using (qubits = Qubit[11]) {
+            for(index in 0..9) {
+                if(And(key, 512 >>> index) > 0) {
+                    X(qubits[index]);
+				}
+			}
+            PerformSDES(plaintext, cipher, Most(qubits), Tail(qubits));
+            set res = IsResultOne(MResetZ(Tail(qubits)));
+            ApplyToEach(Reset, qubits);
+		}
+        return res;
+	}
+
+    operation SDESBreakWithGrover(plaintext : Int, cipher : Int) : Unit {
+        using (qubits = Qubit[10]) {
+            let PerformThisSDES = PerformSDES(plaintext, cipher, _, _);
+
+            GroversSearch_Reference(qubits, PerformThisSDES, NIterations(10));
+            
+            PermuteQubits([9,8,7,6,5,4,3,2,1,0], qubits);
+            let result_key = ResultArrayAsInt(ForEach(MResetZ, qubits));
+
+            Message($"  [+] Result Key          : {result_key}");
+            ApplyToEach(Reset, qubits);
+		}
+        
+	}
     @EntryPoint()
     operation HelloQ () : Unit {
         Message("Hello quantum world!");
-        using (qq = Qubit[11]) {
-            //ApplyToEachCA(H, Most(qq));
-            let plaintext = 0b11000111;
-            let cipher = 0b01101110;
-            let key = 0b1110100110;
-            
-            for(i in 0..9) {
-                if(And(key, 512 >>> i) != 0) {
-                    X(qq[i]);
-                }
-            }
-            
-            PerformSDES(plaintext, cipher, Most(qq), Tail(qq));
-            let res = M(Tail(qq));
-            
-            Message($"[+] Plaintext: {plaintext}");
-            Message($"[+] Cipher   : {cipher}");
-            Message($"[+] Key      : {key}");
-            Message($"[+] Result   : {res}");
-            ApplyToEach(Reset, qq);
-        }
+        
+        let plaintext   = 0b11000111;
+        let key         = 0b0111011101;
+        let cipher      = 0b00010100;
+
+        Message("S-DES Cryptanalysis with Grover's Algorithm\n");
+
+        Message($"  [+] Plaintext           : {plaintext}");
+        Message($"  [+] Original Key        : {key}");
+        Message($"  [+] Expected Cipher     : {cipher}");
+        Message("\n");
+        Message("[*] Checking if cipher match...");
+        let doesCipherMatch = EncryptSDES(plaintext, cipher, key);
+
+        if(doesCipherMatch) {
+            Message("  [+] Cipher matches with input.");
+			SDESBreakWithGrover(plaintext, cipher);
+		}
+        else {
+            Message("  [-] Cipher does not match with input.");
+		}
     }
 }
