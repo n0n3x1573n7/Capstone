@@ -10,7 +10,7 @@
 	// https://github.com/microsoft/QuantumKatas/blob/master/GroversAlgorithm/ReferenceImplementation.qs
     // non-adjacent version, since S-DES oracle requires measurement
 	
-    operation OracleConverterImpl_Reference (markingOracle : ((Qubit[], Qubit) => Unit), register : Qubit[]) : Unit {
+    operation OracleConverterImpl_Reference (markingOracle : ((Qubit[], Qubit) => Unit is Adj), register : Qubit[]) : Unit is Adj {
         using (target = Qubit()) {
             within {
                 // Put the target into the |-⟩ state
@@ -34,7 +34,7 @@
         // }
     }
 	
-	function OracleConverter_Reference (markingOracle : ((Qubit[], Qubit) => Unit)) : (Qubit[] => Unit) {
+	function OracleConverter_Reference (markingOracle : ((Qubit[], Qubit) => Unit is Adj)) : (Qubit[] => Unit is Adj) {
         return OracleConverterImpl_Reference(markingOracle, _);
     }
 	
@@ -42,7 +42,7 @@
         (ControlledOnBitString(pattern, X))(queryRegister, target);
     }
 
-    operation ConditionalPhaseFlip_Reference (register : Qubit[]) : Unit {
+    operation ConditionalPhaseFlip_Reference (register : Qubit[]) : Unit is Adj {
         // Define a marking oracle which detects an all zero state
         let allZerosOracle = Oracle_ArbitraryPattern_Reference(_, _, new Bool[Length(register)]);
             
@@ -60,24 +60,23 @@
         }
     }
 	
-    operation GroverIteration_Reference (register : Qubit[], oracle : (Qubit[] => Unit)) : Unit {
+    operation GroverIteration_Reference (register : Qubit[], oracle : (Qubit[] => Unit is Adj)) : Unit is Adj {
         oracle(register);
         HadamardTransform_Reference(register);
         ConditionalPhaseFlip_Reference(register);
         HadamardTransform_Reference(register);
     }
 	
-    operation GroversSearch_Reference (register : Qubit[], oracle : ((Qubit[], Qubit) => Unit), iterations : Int) : Unit {
+    operation GroversSearch_Reference (register : Qubit[], oracle : ((Qubit[], Qubit) => Unit is Adj), iterations : Int) : Unit is Adj {
         
         Message($"[*] Grover Iteration : total {iterations} iteration(s).");
         let phaseOracle = OracleConverter_Reference(oracle);
         HadamardTransform_Reference(register);
-        Message("dumped");
+        
         for (i in 1 .. iterations) {
             
             GroverIteration_Reference(register, phaseOracle);
-            //DumpRegister((), register);
-            //DumpRegister(($"./dump-register-{i}.txt"), register);
+            //DumpRegister($"enter absolute path here", register);
             Message($"  [+] {i} / {iterations} done");
         }
     }

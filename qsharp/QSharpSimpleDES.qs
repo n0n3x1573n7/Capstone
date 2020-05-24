@@ -42,6 +42,7 @@
     ///
     operation SBoxApplySingle(EP : Qubit[], Q : Qubit[], input : Int, output : Int) : Unit is Adj {
         using (ancilla = Qubit[3]) {
+            let allOneOracle4 = Oracle_ArbitraryPattern_Reference(_, _, [true, true, true, true]);
             within {
                 // apply NOT to zero-bits
                 // r0 c0 c1 r0
@@ -50,14 +51,11 @@
                         X(EP[index]);
                     }
                 }
-                CCNOT(EP[0], EP[1], ancilla[0]);       
-                CCNOT(EP[2], ancilla[0], ancilla[1]);
-                CCNOT(EP[3], ancilla[1], ancilla[2]);
             }
             apply {
                 for(index in 0..1) {
                     if(And(output, (2 >>> index)) != 0) {
-                        CNOT(ancilla[2], Q[index]);
+                        allOneOracle4(EP, Q[index]);
                     }
                 }
             }
@@ -106,7 +104,7 @@
     /// 8-qubit intermediate plaintext.
     /// ## subkey
     /// 8-qubit subkey for this round.
-    operation ApplyRound(P : Qubit[], subkey : Qubit[]) : Unit {
+    operation ApplyRound(P : Qubit[], subkey : Qubit[]) : Unit is Adj {
         // qubits for the result of S-Box
         using (qubits = Qubit[2]) {
             let EP_arr1 = [1,2,3,0];    //[4,1,2,3];
@@ -119,16 +117,13 @@
                 for(index in 0..3) {
                     CNOT(subkey[index], P[index+4]);
                 }
-            }
-            apply {
                 SBox0Apply(P[4..7], qubits);
             }
-
-            for(index in 0..1) {
-                CNOT(qubits[index], P[P4[index]]);
-                Reset(qubits[index]);
+            apply {
+                for(index in 0..1) {
+                    CNOT(qubits[index], P[P4[index]]);
+                }
             }
-            
 
             // Calculate qubit[2..3]
             within {
@@ -136,15 +131,13 @@
                 for(index in 0..3) {
                     CNOT(subkey[index+4], P[index+4]);
                 }
+                SBox1Apply(P[4..7], qubits);
             }
             apply {
-                SBox1Apply(P[4..7], qubits);
+                for(index in 0..1) {
+                    CNOT(qubits[index], P[P4[index+2]]);
+                }
             }  
-
-            for(index in 0..1) {
-                CNOT(qubits[index], P[P4[index+2]]);
-                Reset(qubits[index]);
-            }
         }
     }
 
@@ -160,89 +153,86 @@
     /// An 10-qubit key for this S-DES.
     /// ## target
     /// A qubit to indicate the correctness of this S-DES.
-    operation PerformSDES(plaintext : Int, cipher : Int, key : Qubit[], target : Qubit) : Unit {
+    operation PerformSDES(plaintext : Int, cipher : Int, key : Qubit[], target : Qubit) : Unit is Adj {
+        let allOneOracle8 = Oracle_ArbitraryPattern_Reference(_, _, [true, true, true, true, true, true, true, true]);
         using(pqubits = Qubit[8]) {
-            // Step 0.      Prepare qubits based on plaintext
-            // pqubits : [2^7, 2^6, ..., 2^0]
-            for(index in 0..7) {
-                if(And(plaintext, (128 >>> index) ) != 0) {
-                    X(pqubits[index]);
+            within {
+                // Step 0.      Prepare qubits based on plaintext
+                // pqubits : [2^7, 2^6, ..., 2^0]
+                for(index in 0..7) {
+                    if(And(plaintext, (128 >>> index) ) != 0) {
+                        X(pqubits[index]);
+                    }
                 }
-            }
             
-            // Step 1-1.    Permute P with IP
-            // [1,2,3,4,5,6,7,8] -> [2,6,3,1,4,8,5,7]
-            // perm : [3,0,2,4,6,1,7,5]
+                // Step 1-1.    Permute P with IP
+                // [1,2,3,4,5,6,7,8] -> [2,6,3,1,4,8,5,7]
+                // perm : [3,0,2,4,6,1,7,5]
 
-            PermuteQubits([3,0,2,4,6,1,7,5], pqubits);
+                PermuteQubits([3,0,2,4,6,1,7,5], pqubits);
 
-            // Step 1-2.    Permute key with P10
-            // [1,2,3,4,5,6,7,8,9,10] -> [3,5,2,7,4,10,1,9,8,6]
-            // perm : [6,2,0,4,1,9,3,8,7,5]
-            PermuteQubits([6,2,0,4,1,9,3,8,7,5], key);
+                // Step 1-2.    Permute key with P10
+                // [1,2,3,4,5,6,7,8,9,10] -> [3,5,2,7,4,10,1,9,8,6]
+                // perm : [6,2,0,4,1,9,3,8,7,5]
+                PermuteQubits([6,2,0,4,1,9,3,8,7,5], key);
 
-            // Step 2-1.    Generate K1 from key
-            GenerateSubkey(key);
+                // Step 2-1.    Generate K1 from key
+                GenerateSubkey(key);
 
-            // Step 2-2.    Apply P8
-            // [1,2,3,4,5,6,7,8,9,10] -> [1,2,6,3,7,4,8,5,10,9]
-            // perm : [0,1,3,5,7,2,4,6,9,8]
-            within {
-                PermuteQubits([0,1,3,5,7,2,4,6,9,8], key);
-            }
-            // Step 2-3.    Apply 1st Round
-            apply {
-                ApplyRound(pqubits, key[2..9]);
-            }
+                // Step 2-2.    Apply P8
+                // [1,2,3,4,5,6,7,8,9,10] -> [1,2,6,3,7,4,8,5,10,9]
+                // perm : [0,1,3,5,7,2,4,6,9,8]
+                within {
+                    PermuteQubits([0,1,3,5,7,2,4,6,9,8], key);
+                }
+                // Step 2-3.    Apply 1st Round
+                apply {
+                    ApplyRound(pqubits, key[2..9]);
+                }
   
-            // Message("Round 1 finished");
+                // Message("Round 1 finished");
             
-            // Step 3.      Swap nibbles of P
-            PermuteQubits([4,5,6,7,0,1,2,3], pqubits);
+                // Step 3.      Swap nibbles of P
+                PermuteQubits([4,5,6,7,0,1,2,3], pqubits);
 
-            // Step 4-1.    Generate K2 from key
-            GenerateSubkey(key);
-            GenerateSubkey(key);
+                // Step 4-1.    Generate K2 from key
+                GenerateSubkey(key);
+                GenerateSubkey(key);
 
-            // Step 4-2.    Permute key with P10
-            within {
-                PermuteQubits([0,1,3,5,7,2,4,6,9,8], key);
-            }
-            // Step 4-3.    Apply 1st Round
-            apply {
-                ApplyRound(pqubits, key[2..9]);
-            }
+                // Step 4-2.    Permute key with P10
+                within {
+                    PermuteQubits([0,1,3,5,7,2,4,6,9,8], key);
+                }
+                // Step 4-3.    Apply 1st Round
+                apply {
+                    ApplyRound(pqubits, key[2..9]);
+                }
 
-            // Message("Round 2 finished");
+                // Message("Round 2 finished");
 
-            // Step 5.      Permute P with IP^{-1}
-            // [1,2,3,4,5,6,7,8] -> [4,1,3,5,7,2,8,6]
-            // perm : [1,5,2,0,3,7,4,6]
-            PermuteQubits([1,5,2,0,3,7,4,6], pqubits);
+                // Step 5.      Permute P with IP^{-1}
+                // [1,2,3,4,5,6,7,8] -> [4,1,3,5,7,2,8,6]
+                // perm : [1,5,2,0,3,7,4,6]
+                PermuteQubits([1,5,2,0,3,7,4,6], pqubits);
         
             
-            // Microsoft BoolArr returns like [2^0, 2^1, ..., 2&6]
-            // while our notation is [2^7, 2^6, ..., 2^0]
-            PermuteQubits([7,6,5,4,3,2,1,0], pqubits);
-
-            // Step 6-1.    Measure P
-            // Step 6-2.    Compare with cipher and set target qubit
-            // Step 7-2.    Set P to zero-state
-            let res1 = ResultArrayAsInt(ForEach(MResetZ, pqubits));
-            
-            Message($"    [@] S-DES result : {res1}");
-            
-            let res = cipher == res1;
-            
-            // Step 7-1.    Restore key qubits
-            Adjoint GenerateSubkey(key);
-            Adjoint GenerateSubkey(key);
-            Adjoint GenerateSubkey(key);
-            Adjoint PermuteQubits([6,2,0,4,1,9,3,8,7,5], key);
-
-            if(res) {
-                X(target);
-            }
+                // Microsoft BoolArr returns like [2^0, 2^1, ..., 2&6]
+                // while our notation is [2^7, 2^6, ..., 2^0]
+                //PermuteQubits([7,6,5,4,3,2,1,0], pqubits);
+                
+                //DumpRegister((), pqubits);
+                // !!!!
+                for(index in 0..7) {
+                    if(And(cipher, 1 <<< (7-index)) == 0) {
+                        //Message($"Flip {index}");
+                        X(pqubits[index]);
+					}
+				}
+			}
+            apply {
+                //DumpRegister((), pqubits);
+                allOneOracle8(pqubits, target);
+			}
         }
     }
     
@@ -292,7 +282,9 @@
     @EntryPoint()
     operation HelloQ () : Unit {
         Message("Hello quantum world!");
-        
+        // #1 : 0b00010000, 0b00110011, {0b1100010011}
+        // #2 : 0b10100101, 0b00110110, {'0011011111', '0010010111'}
+        // #4 : 0b11000111, 0b00010100, {0b1001010000, 0b0110010101, 0b0111011101, 0b1000011000}
         let plaintext   = 0b11000111;
         let key         = 0b0111011101;
         let cipher      = 0b00010100;
