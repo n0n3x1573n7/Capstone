@@ -226,13 +226,13 @@
                     if(And(cipher, 1 <<< (7-index)) == 0) {
                         //Message($"Flip {index}");
                         X(pqubits[index]);
-					}
-				}
-			}
+                    }
+                }
+            }
             apply {
                 //DumpRegister((), pqubits);
                 allOneOracle8(pqubits, target);
-			}
+            }
         }
     }
     
@@ -256,14 +256,14 @@
             for(index in 0..9) {
                 if(And(key, 512 >>> index) > 0) {
                     X(qubits[index]);
-				}
-			}
+                }
+            }
             PerformSDES(plaintext, cipher, Most(qubits), Tail(qubits));
             set res = IsResultOne(MResetZ(Tail(qubits)));
             ApplyToEach(Reset, qubits);
-		}
+        }
         return res;
-	}
+    }
 
     operation SDESBreakWithGrover(plaintext : Int, cipher : Int) : Unit {
         using (qubits = Qubit[10]) {
@@ -275,10 +275,10 @@
             let result_key = ResultArrayAsInt(ForEach(MResetZ, qubits));
 
             Message($"  [+] Result Key          : {result_key}");
-            ApplyToEach(Reset, qubits);
-		}
+            ApplyToEach(Reset, qubits);     
+        }
         
-	}
+    }
     @EntryPoint()
     operation HelloQ () : Unit {
         Message("Hello quantum world!");
@@ -300,10 +300,10 @@
 
         if(doesCipherMatch) {
             Message("  [+] Cipher matches with input.");
-			SDESBreakWithGrover(plaintext, cipher);
-		}
+            SDESBreakWithGrover(plaintext, cipher);
+        }
         else {
             Message("  [-] Cipher does not match with input.");
-		}
+        }
     }
 }

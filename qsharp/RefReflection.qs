@@ -6,10 +6,10 @@
     open Microsoft.Quantum.Arrays;
     open Microsoft.Quantum.Measurement;
     open Microsoft.Quantum.Diagnostics;
-	
-	// https://github.com/microsoft/QuantumKatas/blob/master/GroversAlgorithm/ReferenceImplementation.qs
+    
+    // https://github.com/microsoft/QuantumKatas/blob/master/GroversAlgorithm/ReferenceImplementation.qs
     // non-adjacent version, since S-DES oracle requires measurement
-	
+    
     operation OracleConverterImpl_Reference (markingOracle : ((Qubit[], Qubit) => Unit is Adj), register : Qubit[]) : Unit is Adj {
         using (target = Qubit()) {
             within {
@@ -33,11 +33,11 @@
         //     H(qubit);
         // }
     }
-	
-	function OracleConverter_Reference (markingOracle : ((Qubit[], Qubit) => Unit is Adj)) : (Qubit[] => Unit is Adj) {
+    
+    function OracleConverter_Reference (markingOracle : ((Qubit[], Qubit) => Unit is Adj)) : (Qubit[] => Unit is Adj) {
         return OracleConverterImpl_Reference(markingOracle, _);
     }
-	
+    
     operation Oracle_ArbitraryPattern_Reference (queryRegister : Qubit[], target : Qubit, pattern : Bool[]) : Unit is Adj {        
         (ControlledOnBitString(pattern, X))(queryRegister, target);
     }
@@ -59,14 +59,14 @@
             Controlled Z(Most(register), Tail(register));
         }
     }
-	
+    
     operation GroverIteration_Reference (register : Qubit[], oracle : (Qubit[] => Unit is Adj)) : Unit is Adj {
         oracle(register);
         HadamardTransform_Reference(register);
         ConditionalPhaseFlip_Reference(register);
         HadamardTransform_Reference(register);
     }
-	
+    
     operation GroversSearch_Reference (register : Qubit[], oracle : ((Qubit[], Qubit) => Unit is Adj), iterations : Int) : Unit is Adj {
         
         Message($"[*] Grover Iteration : total {iterations} iteration(s).");
