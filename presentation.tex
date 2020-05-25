@@ -156,6 +156,18 @@
 	\end{frame}
 }
 
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+% Define bar chart colors
+%
+\definecolor{bblue}{HTML}{4F81BD}
+\definecolor{rred}{HTML}{C0504D}
+\definecolor{ggreen}{HTML}{9BBB59}
+\definecolor{ppurple}{HTML}{9F4C7C}
+
+
 \title{Quantum Speedup on Exhaustive-search Attacks on Cryptosystems}
 \subtitle{Week 7 Report for Class 75}
 
@@ -462,6 +474,123 @@
             Expected cipher matched with Python S-DES implementation output.
         }
    	\end{frame} 
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        However, applying Grover's was not simple as it looked
+        \begin{itemize}
+            \item The oracle should be adjoint, but current version includes measurement (in result ciphertext and S-Box)
+            \item How to create an oracle qubit rather than measuring the result ciphertext?
+            \begin{itemize}
+                \item perform CNOT gate 8 times (with 7 more qubits) : infeasible
+                \item \texttt{Controlled} functor : doable
+                \item All-one oracle : similar (which is faster?)
+            \end{itemize}
+        \end{itemize}
+        
+   	\end{frame}
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        \begin{itemize}
+            \item Measurement was wiped out smoothly with the cost of execution speed
+            \item Each round need to be reversed, and so does the S-Box, increased runtime about 4x
+            \item Qubit optimization in S-Box offset this demerit
+            \begin{itemize}
+                \item Used the same `all-one oracle' trick
+            \end{itemize}
+        \end{itemize}
+   	\end{frame}
+       
+   	\begin{frame}{Quantum S-DES Implementation}
+        \begin{figure}
+            \centering
+            \includegraphics[height=0.5\textheight]{./Images/Qsharp-SDES-Grover-k1.png}
+        \end{figure}
+        Expected key matched with original key (with runtime 19 min 31 sec, performing each S-DES encryption within 45s on average).
+   	\end{frame}
+       
+    \section{Quantum S-DES Testing}
+       
+    \begin{frame}{Prerequisites}
+        \begin{itemize}
+            \item Let $ SDES(P, K) = C $ be a function s.t. encrypting plaintext $ P $ with S-DES and key $ K $ yields $ C $.
+            \item Let $ f : \{0, 1\}^8 \times \{0, 1\}^8 \to \mathcal{P}({\{0, 1\}^{10}})$ be a function such that $ f(P, C) = \{ K \in \{0, 1\}^{10} \,\vert\, SDES(P, K) = C\}$.
+            \item Since key size is 4x of cipher size, we guessed that for arbitrary $ P $ and $ C $, $ \left\vert f(P, C) \right\vert$ is likely to be 4.
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Prerequisites : Key Size}
+        ...and we were wrong!
+        % include graph here
+        \begin{tikzpicture}
+            \begin{axis}[
+                width  = 0.95*\textwidth,
+                height = 0.8\textheight,
+%                major x tick style = transparent,
+                ybar,
+                bar width=6pt,
+                ymajorgrids = true,
+                ylabel = {\# of $ (P, C) $ pairs},
+                xlabel = {Key size},
+                symbolic x coords={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17},
+                xtick = data,
+                enlarge x limits=0.05,
+                ymin=0,
+                ymode=log,
+            ]
+   
+                \addplot[style={bblue,fill=bblue,mark=none}]
+                    coordinates {
+                        (1, 4376)
+                        (2, 10696)
+                        (3, 6888)
+                        (4, 11896)
+                        (5, 3848)
+                        (6, 9576)
+                        (7, 2728)
+                        (8, 4184)
+                        (9, 968)
+                        (10, 1944)
+                        (11, 272)
+                        (12, 456)
+                        (13, 16)
+                        (14, 24)
+                        (15, 96)
+                        (16, 8)
+                        (17, 8)
+                        };
+            \end{axis}
+        \end{tikzpicture}
+    \end{frame}
+       
+   	\begin{frame}{Quantum S-DES Testing : Testing with \#Key = 1}
+        If $ (P, C) =$ (\texttt{10100100}, \texttt{00110011}). Then $ f(P, C) = $  $\{$\texttt{1101100110}$\}$.
+        \begin{itemize}
+            \item Program yielded correct key.
+            \item By dumping key qubits, we can observe the probability of each basis.
+            \begin{itemize}
+                \item At first, the probability of answer basis is $ 0.008766 $ while the others are $ 0.000969 $.
+                \item The gap widens next turn: $ 0.024224 $ and $ 0.000954 $.
+                \item Ultimately it becomes $ 0.999461 $ and $ 0.000001 $ (at 25th iteration).
+            \end{itemize}
+        \end{itemize}
+   	\end{frame} 
+       
+       
+   	\begin{frame}{Quantum S-DES Testing : Testing with \#Key = 4}
+        If $ (P, C) =$ (\texttt{11000111}, \texttt{00010100}). Then $ \vert f(P, C) \vert = 4$.
+        \begin{itemize}
+            \item Program yielded wrong key.
+            \item By dumping key qubits, we can observe the probability of each basis.
+            \begin{itemize}
+                \item At first, the probability of answer basis is $ 0.008698 $ while the others are $ 0.000946 $.
+                \item The gap widens next turn: $ 0.023659 $ and $ 0.000888 $.
+                \item It peaks at 12th iteration: $ 0.249987 $ and $ 0.000000 $.
+                \item However it goes back next turn: $ 0.246547 $ and $ 0.000014 $
+                \item Ultimately the probability of answer basis becomes lower than the others: $ 0.000575 $ and $ 0.000978 $.
+            \end{itemize}
+            \item Although the algorithm and the implementation is correct, what happened here? % 논문 추가
+        \end{itemize}
+   	\end{frame}
      
     
 	\section{Current Works and Future Plans}
@@ -479,10 +608,9 @@
 	\begin{frame}
 		\frametitle{Work in Progress(Sangheon Lee)}
 		\begin{itemize}
-            \item Implementation of S-DES completed
-            \item Plan to work on Grover
-            \item Constructing test vectors
-			\item Possibly reduce some quantum gates
+            \item Possibly reduce some quantum gates
+            \item Analyze complexity of each gate
+            \item Search for internal dumping library
 		\end{itemize}
 	\end{frame}
 	
