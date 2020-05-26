@@ -591,6 +591,14 @@
             \item Although the algorithm and the implementation is correct, what happened here? % 논문 추가
         \end{itemize}
    	\end{frame}
+   	
+   	\begin{frame}{Quantum S-DES Testing: What Went Wrong?}
+   		\begin{itemize}
+   			\item When running Grover's Algorithm, there is a number of desired steps, say $n$.
+   			\item If we overshoot that number of step, the probability of basis decreases!
+   			\item On the $2n$-th step, the probability becomes all the same for each of the cases again, forming a cycle.
+   		\end{itemize}
+   	\end{frame}
      
     
 	\section{Current Works and Future Plans}
