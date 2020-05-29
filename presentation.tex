@@ -16,7 +16,8 @@
 \usepackage[normalem]{ulem}
 
 \usepackage{graphicx}
-
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
 \usepackage{braket}
 \newcommand{\iu}{{i\mkern1mu}}
 
@@ -419,7 +420,7 @@
 	\begin{frame}{Dealing with Expansions}
 		\begin{itemize}
 			\item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
-			\item Use XOR operation to copy the information.
+			\item Use XOR(CNOT) operation to copy the information.
 		\end{itemize}
 	\end{frame}
 	
@@ -445,12 +446,46 @@
 		\end{itemize}
 	\end{frame}
 	
+    
 	\begin{frame}{Dealing with S-boxes: The Brute-force Method}
-		\begin{itemize}
-			\item For each possibility in the S-box input, use a circuit similar to this:
-			\item INPUT IMAGE HERE
-			\item Allows for reusing ancilla bits!
-		\end{itemize}
+    For each possibility in the S-box input, use a circuit similar to this:
+    \begin{center}
+    \begin{tikzpicture}
+    \node[scale=0.6] {
+    \begin{quantikz}
+    \lstick{$\ket{In_3}$} & \gate{X} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{1} & \gate{X} & \qw  \rstick{$\ket{In_3}$} \\
+    \lstick{$\ket{In_2}$} & \qw & \ctrl{3} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \qw & \qw \rstick{$\ket{In_2}$} \\
+    \lstick{$\ket{In_1}$} & \gate{X} & \qw & \ctrl{3} & \qw & \qw & \qw & \qw & \ctrl{3} & \qw & \gate{X} & \qw \rstick{$\ket{In_1}$} \\
+    \lstick{$\ket{In_0}$} & \gate{X} & \qw & \qw & \ctrl{3} & \qw & \qw & \ctrl{3} & \qw & \qw & \gate{X} & \qw \rstick{$\ket{In_0}$} \\[0.2cm]
+    \lstick{$\ket{0}$} & \qw & \targ{} & \ctrl{1} & \qw & \qw & \qw & \qw & \ctrl{1} & \targ{} & \qw & \qw \rstick{$\ket{0}$} \\
+    \lstick{$\ket{0}$} & \qw & \qw & \targ{} & \ctrl{1} & \qw & \qw & \ctrl{1} & \targ{} & \qw & \qw & \qw \rstick{$\ket{0}$} \\
+    \lstick{$\ket{0}$} & \qw & \qw & \qw & \targ{} & \ctrl{1} & \ctrl{2} & \targ{} & \qw & \qw & \qw & \qw \rstick{$\ket{0}$} \\[0.2cm]
+    \lstick{$\ket{0}$} & \qw & \qw & \qw & \qw & \targ{} & \qw & \qw & \qw & \qw & \qw & \qw \rstick{$\ket{Out_1}$} \\ 
+    \lstick{$\ket{0}$} & \qw & \qw & \qw & \qw & \qw & \targ{} & \qw & \qw & \qw & \qw & \qw \rstick{$\ket{Out_0}$}\\
+    \end{quantikz}
+    };
+    \end{tikzpicture}
+    \end{center}
+    ...which requires 3 ancilla qubits.
+	\end{frame}
+    
+	\begin{frame}{Dealing with S-boxes: The Brute-force Method}
+    Thanks to the Microsoft Q\# library, we don't need that much ancilla qubits.
+    \begin{center}
+    \begin{tikzpicture}
+    \node[scale=0.8] {
+    \begin{quantikz}
+    \lstick{$\ket{In_3}$} & \gate{X} & \ctrl{1} & \ctrl{1} & \gate{X} & \qw \rstick{$\ket{In_3}$} \\ 
+    \lstick{$\ket{In_2}$} & \qw & \ctrl{1} & \ctrl{1} & \qw & \qw \rstick{$\ket{In_2}$} \\ 
+    \lstick{$\ket{In_1}$} & \gate{X} & \ctrl{1} & \ctrl{1} & \gate{X} & \qw \rstick{$\ket{In_1}$} \\ 
+    \lstick{$\ket{In_0}$} & \gate{X} & \ctrl{1} & \ctrl{2} & \gate{X} & \qw \rstick{$\ket{In_0}$} \\[1cm]
+    \lstick{$\ket{0}$} & \qw & \targ & \qw & \qw & \qw & \qw \rstick{$\ket{Out_1}$} \\ 
+    \lstick{$\ket{0}$} & \qw & \qw & \targ & \qw & \qw & \qw  \rstick{$\ket{Out_0}$}
+    \end{quantikz}
+    };
+    \end{tikzpicture}
+    \end{center}
+    No (explicit) ancilla qubits are required!
 	\end{frame}
 	
 	\begin{frame}{Dealing with S-boxes: Combining the two methods?}
@@ -520,6 +555,7 @@
         }
    	\end{frame} 
        
+
    	\begin{frame}{Quantum S-DES Implementation}
         However, applying Grover's was not simple as it looked
         \begin{itemize}
