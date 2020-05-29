@@ -254,7 +254,6 @@
 			\item Agreed to study together before parting ways
 		\end{itemize}
 	\end{frame}
-	\fi
 	
 	\section{Backgrounds}
 	
@@ -330,6 +329,46 @@
 			\item Destroys quantum superposition; often called "destructive".
 		\end{itemize}
 	\end{frame}
+	\fi
+	
+	\section{S-DES}
+	
+		\begin{frame}{S-DES}
+		\begin{itemize}
+			\item Simplified DES with 2 rounds
+			\item Structure similar to DES but simplified with 10-bit key and 8-bit plaintext.
+			\item Quantum oracle needs to be reversible, of which S-DES is (normally) not.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Structure of S-DES}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.5\textwidth]{./Images/sdes.png}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Structure of S-DES}
+		Consists of two main parts:
+		\begin{itemize}
+			\item Key Scheduling, where we generate subkeys from the given key
+			\item Feistel function, where we encrypt the plaintext using the scheduled keys
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Structure of S-DES: Key Scheduling}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.5\textwidth]{./Images/keygen.png}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Structure of S-DES: Feistel function}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.38\textwidth]{./Images/feistel.png}
+		\end{figure}
+	\end{frame}
 	
 	\section{Grover's Algorithm}
 	
@@ -366,21 +405,6 @@
 	
 	\section{Quantum S-DES Oracle}
 	
-	\begin{frame}{S-DES}
-		\begin{itemize}
-			\item Simplified DES with 2 rounds
-			\item Structure similar to DES but simplified with 10-bit key and 8-bit plaintext.
-			\item Quantum oracle needs to be reversible, of which S-DES is (normally) not.
-		\end{itemize}
-	\end{frame}
-	
-	\begin{frame}{Structure of S-DES}
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.5\textwidth]{./Images/sdes.png}
-		\end{figure}
-	\end{frame}
-	
 	\begin{frame}{Quantumizing S-DES}
 		\begin{itemize}
 			\item Most parts are permutations or compressions; no problems here.
@@ -388,36 +412,57 @@
 		\end{itemize}
 		\begin{enumerate}
 			\item S-Boxes
-			\begin{itemize}
-				\item Consists of lookup table: not ideal for our situation.
-				\item \sout{Broken the S-Boxes into fundamental and/or/not-gates}
-				\item Actually, the brute-force method(of checking each cases) enables reusage of ancilla bits, thereby reducing the number of required qubits!
-				\item Classic gates are not reversible; use CNOT/CCNOT gates to make them reversible.
-				
-			\end{itemize}
 			\item Expansion
-			\begin{itemize}
-				\item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
-				\item Use XOR operation to copy the information.
-			\end{itemize}
 		\end{enumerate}
+	\end{frame}
+	
+	\begin{frame}{Dealing with Expansions}
+		\begin{itemize}
+			\item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
+			\item Use XOR operation to copy the information.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Dealing with S-boxes}
+		Consists of Lookup tables: Not ideal for quantum computing
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.5\textwidth]{./Images/sbox.png}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{Dealing with S-boxes: Quine-McCluskey Method}
+		\begin{itemize}
+			\item Break the S-Boxes into fundamental and/or/not-gates
+			\item Letting the input bits into S-Boxes $ABCD$:
+			\begin{itemize}
+				\item S0 bit 1: $AB'C'+A'B'C+BCD'+ABD+BC'D$
+				\item S0 bit 2: $AD'+B'D'+A'BC+ABC'$
+				\item S1 bit 1: $AB'C'+ACD+A'CD'+A'BD'$
+				\item S2 bit 2: $B'C'D+AB'C+BCD+BC'D'$
+			\end{itemize}
+			\item Directly calculating this would cause too many ancilla bits to use, i.e. for each and/or operation, one ancilla bit is required.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Dealing with S-boxes: The Brute-force Method}
+		\begin{itemize}
+			\item For each possibility in the S-box input, use a circuit similar to this:
+			\item INPUT IMAGE HERE
+			\item Allows for reusing ancilla bits!
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Dealing with S-boxes: Combining the two methods?}
+		\begin{itemize}
+			\item Still a hypothetical yet.
+			\item The structure of Quine-McCluskey simplified S-Box is similar to Brute-force
+			\item The number of terms may decrease significantly, and one ancilla bit can definitely be removed.
+			\item Needs further testing...
+		\end{itemize}
 	\end{frame}
     
     \section{Quantum S-DES Implementation}
-    
-   	\begin{frame}{S-DES Obstacles}
-   		\begin{itemize}
-            \item Expansion : Directly clone with XOR twice
-            \begin{itemize}
-                \item With extra 8 qubits, we can explicitly use expanded plaintext
-            \end{itemize}
-            \item S-Box : Passing all the candidates
-            \begin{itemize}
-                \item Denote S-Box function as $ f : \{0,1\}^4 \to \{0,1\}^2 $
-                \item If the dealing plaintext has a basis for $ x \in \{0, 1\}^4 $, apply XOR(NOT) to result S-Box qubit
-            \end{itemize}
-   		\end{itemize}
-   	\end{frame}  
        
    	\begin{frame}{Quantum S-DES Implementation}
         Initially, 34 explicit qubits were used in total.
