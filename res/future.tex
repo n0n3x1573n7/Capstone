@@ -1,0 +1,55 @@
+\documentclass{beamer}
+\usetheme{Darmstadt}
+\usepackage{CJKutf8}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1, T2A]{fontenc}
+\usepackage{fontspec}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{braket}
+
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+\begin{document}
+\begin{frame}
+        \frametitle{Work in Progress(Mingyu Cho)}
+        \begin{itemize}
+            \item Implemented a non-quantum S-DES(in python) for testing the quantum version.
+            \item Implemented Brute-force attack on S-DES and developed a code for keycount for (plaintext, ciphertext) pair.
+            \item Started preliminary analysis on the gate applications
+            \item Looking for possible speedups on the quantum side to aid the simulation
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Work in Progress(Sangheon Lee)}
+        \begin{itemize}
+            \item Possibly reduce some quantum gates
+            \item Analyze complexity of each gate
+            \item Search for internal dumping library
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Future Plans}
+        \begin{itemize}
+            %\item Dig in deeper on the backgrounds, if necessary.
+            %\item Understand Grover's Algorithm and other quantum algorithms to know how to utilize it.
+            %\item Update sample code of Grover's Algorithm by implementing oracle function and randomization.
+            %\item Possibly utilize IBM Quantum Experience?
+            %\item Search some more sample codes (not sure if implementing and debugging Shor's and QFT is necessary).
+            \item Construct and test S-DES and apply Grover's.
+            \begin{itemize}
+                \item Since S-DES consists of various components, all of these must be implemented carefully and in order
+            \end{itemize}
+            \item Hope to import Microsoft Q\# implementation to qiskit (IBM Quantum Experience)
+            \item Reduce complexity of quantum gates if possible (as Prof. Hong suggested)
+        \end{itemize}
+    \end{frame}
+\end{document}

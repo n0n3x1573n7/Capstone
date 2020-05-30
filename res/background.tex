@@ -1,0 +1,162 @@
+\documentclass{beamer}
+\usetheme{Darmstadt}
+\usepackage{CJKutf8}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1, T2A]{fontenc}
+\usepackage{fontspec}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{braket}
+
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+\begin{document}
+    \section{Necessity}
+
+    \begin{frame}
+        \frametitle{Necessity}
+
+        \begin{itemize}
+            \item ``Quantum Supremacy" imminent
+            \item Post-quantum stage makes most cryptosystems used nowadays unsafe
+            \begin{itemize}
+                \item Prime factorization broken by Shor's Algorithm
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \section{Content}
+
+    \begin{frame}
+        \frametitle{Content}
+
+        \begin{itemize}
+            \item Targeting symmetric-key cryptosystem
+            \begin{itemize}
+                \item Specifically, DES will be used.
+                \item If possible, make it able to be modified for any symmetric-key cryptosystems.
+            \end{itemize}
+            \item Brute-force exhaustive key search quantum algorithm
+        \end{itemize}
+    \end{frame}
+
+    \section{Methods}
+
+    \begin{frame}
+        \frametitle{Methods}
+        \begin{itemize}
+            \item Modify Grover's Algorithm to crack DES
+            \begin{itemize}
+                \item $\Omega(\sqrt{n})$ search algorithm for a data table of $n$
+            \end{itemize}
+            \item Optionally, simulate it using projectq, a python-based quantum simulator
+            \item Computationally determine and verify expected run-time, compare with existing attacks.
+            \item Speed up if possible and/or necessary
+        \end{itemize}
+    \end{frame}
+
+    \section{Expectations}
+
+    \begin{frame}
+        \frametitle{Expectations}
+
+        \begin{itemize}
+            \item The quantum algorithm will prove to be faster than at least the traditional brute-force exhaustive search.
+            \item Planning to contrast two methods using the length of the key as a fixed variable if the algorithm is modifiable to others.
+        \end{itemize}
+    \end{frame}
+
+    \section{Requirements}
+
+    \begin{frame}
+        \frametitle{Requirements}
+
+        \begin{itemize}
+            \item Papers and/or textbooks on quantum computation
+            \item Help from Prof. Hong(He suggested the topic)
+            \item[]
+            \item Currently working with Sangheon Lee to study the backgrounds
+            \item Agreed to study together before parting ways
+        \end{itemize}
+    \end{frame}
+
+    \section{Backgrounds}
+
+    \begin{frame}
+        \frametitle{Mathematical Backgrounds}
+        \begin{itemize}
+            \item Complex numbers
+            \begin{itemize}
+                \item Complex plane $a+b\iu=(a,b)$
+                \item Complex polar $\rho e^{\phi \iu}=\rho \cos \phi + \rho \sin \phi \iu$
+            \end{itemize}
+            \item 2-dimensional Hilbert space
+            \begin{itemize}
+                \item A complex vector space, utilizing conjugate transposes.
+                \item When constricted to $\mathbb{R}$, same as $\mathbb{R}^2$ vector space.
+            \end{itemize}
+            \item Most of the time on Week 4 was spent on understanding the mathematical backgrounds on 2-dimensional Hilbert spaces and special matrices which can only be considered on $\mathbb{C}$.
+            \item Additionally, analyzing Grover's Algorithm implementation in Microsoft Q\# was done.
+        \end{itemize}
+    \end{frame}
+
+    \section{Qubits}
+    \begin{frame}
+        \frametitle{Qubits}
+        \begin{itemize}
+            \item Quantum Bit(Qubit for short) is a probabilistic vector of information.
+            \item $\ket{0}=\begin{pmatrix} 1 \\ 0 \end{pmatrix}$, $\ket{1}=\begin{pmatrix} 0 \\ 1 \end{pmatrix}$
+            \item A general qubit is represented as $u=\alpha \ket{0}+\beta \ket{1}$
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Three Main Types of Operation}
+        \begin{itemize}
+            \item Creation
+            \item Reversible Operation
+            \item Measurement
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Creation}
+        \begin{itemize}
+            \item As simple as creating $\ket{0}$ or $\ket{1}$.
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Reversible Operation}
+        \begin{itemize}
+            \item Represented using unitary matrix
+            \begin{itemize}
+                \item $U^*U=UU^*=I$, where $U^*$ is a conjugate transpose of $U$
+            \end{itemize}
+            \item Two frequently used operations
+            \begin{itemize}
+                \item X-gate $X=\begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ (so-called NOT gate)
+                \item Hadamard Gate $H=\dfrac{1}{\sqrt{2}}\begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$
+                \item Hadamard Gate creates a Quantum Superposition
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+        \frametitle{Measurement}
+        \begin{itemize}
+            \item A non-deterministic(probabilistic) measure of a qubit $u$.
+            \item For a vector $u=\begin{pmatrix} \alpha \\ \beta \end{pmatrix}$ where $\|u\|=1$
+            \begin{itemize}
+                \item returns "true" with probability $\|\alpha\|^2$, and $u$ becomes $\ket{0}$
+                \item returns "false" with probability $\|\beta\|^2$, and $u$ becomes $\ket{1}$
+            \end{itemize}
+            \item Destroys quantum superposition; often called "destructive".
+        \end{itemize}
+    \end{frame}
+\end{document}
