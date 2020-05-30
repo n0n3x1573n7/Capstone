@@ -26,7 +26,7 @@
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}{Number of Gates: S-Box}
+	\begin{frame}{Number of Gates: Brute-forcing S-Box}
 		\begin{itemize}
 			\item Both S-box requires certain number of Pauli-X and Toffoli(CCNOT) gates.
 			\item The sum of gates required for each of the 16 inputs possible:
@@ -41,37 +41,46 @@
 		\end{itemize}
 	\end{frame}
 	
-	\begin{frame}{Number of Gates: S-Box}
+	\begin{frame}{Number of Gates: Quine-McCluskey S-Box}
 		\begin{itemize}
 			\item What about Quine-McCluskey Method?
-			\item Looking at S-box 1:
+			\item Looking at S-boxes:
 			\begin{itemize}
 				\item S1 bit 1: $AB'C'+A'B'C+BCD'+ABD+BC'D$
 				\item S1 bit 2: $AD'+B'D'+A'BC+ABC'$
+				\item S2 bit 1: $AB'C'+ACD+A'CD'+A'BD'$
+				\item S2 bit 2: $B'C'D+AB'C+BCD+BC'D'$
 			\end{itemize}
-			\item S1 requires 7 OR operations, all of which must be done with Toffoli gates.
-			\item Compared to the brute-force method, this takes even more gates!
+			\item Only OR operations need to be done with Toffoli gates; AND operations can be done the same way as Brute-force.
+			\item For any given input, exactly the following number of operations are required in naïve approach:
+			\begin{center}
+				\begin{tabular}{c|c|c}
+					& NOT & OR \\\hline
+					S-box 1 & 11      & 7      \\\hline
+					S-box 2 & 10      & 6
+				\end{tabular}
+			\end{center}
+			\item TODO
 		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}{Number of Gates: S-Box Input and Output}
 		\begin{itemize}
-			\item Assume 3 Pauli-X gates and 1 Toffoli gate per single S-box calculation.
 			\item For input, 4 CNOT gates are required.
 			\item To copy the output, 2 more CNOT gates are required.
 			\item To make this reversible, S-box application and input processes must be reversed, requiring 2 S-Box applications and 8 CNOT gates.
-			\item[$\Rightarrow$] Total of 10 CNOT gates, 6 Pauli-X gates, and 2 Toffoli gates.
+			\item[$\Rightarrow$] Total of 10 CNOT gates, along with two S-box applications.
 		\end{itemize}
 	\end{frame}
 	
 	\begin{frame}{Number of Gates: Apply Rounds}
 		\begin{itemize}
-			\item Two S-Boxes are applied per round.
+			\item Both S-boxes are applied per round, scoring in for 20 CNOT gates, 94 Pauli-X gates, and 33 Toffoli gates.
 			\begin{itemize}
 				\item The remaining operations are all permutations.
 			\end{itemize}
 			\item There are two rounds in total.
-			\item[$\Rightarrow$] Total of 40 CNOT gates, 24 Pauli-X gates, and 8 Toffoli gates per single oracle call!
+			\item[$\Rightarrow$] Total of 40 CNOT gates, 188 Pauli-X gates, and 66 Toffoli gates per single oracle call!
 		\end{itemize}
 	\end{frame}
 \end{document}
