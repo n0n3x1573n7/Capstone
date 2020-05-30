@@ -1,0 +1,77 @@
+\documentclass{beamer}
+\usetheme{Darmstadt}
+\usepackage{CJKutf8}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1, T2A]{fontenc}
+\usepackage{fontspec}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{braket}
+
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+\begin{document}
+	\begin{frame}{Overview}
+		\begin{itemize}
+			\item Most part can be expressed in permutations, but there are parts where we need to use quantum gates.
+			\item In S-Box, we inevitably need to use Pauli-X and Toffoli gates.
+			\item In EP, we need to copy the bits, and thereby requires the use of Toffoli gates.
+			\item In round application, we need to XOR the subkey with some data or S-box result, requiring us to use CNOT gates.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Number of Gates: S-Box}
+		\begin{itemize}
+			\item Both S-box requires certain number of Pauli-X and Toffoli(CCNOT) gates.
+			\item The sum of gates required for each of the 16 inputs possible:
+			\begin{center}
+				\begin{tabular}{c|c|c}
+					        & Pauli-X & Toffoli \\\hline
+					S-box 1 & 50      & 18      \\\hline
+					S-box 2 & 44      & 15
+				\end{tabular}
+			\end{center}
+			\item On average, \textasciitilde3 Pauli-X gates and \textasciitilde1 Toffoli gate is used.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Number of Gates: S-Box}
+		\begin{itemize}
+			\item What about Quine-McCluskey Method?
+			\item Looking at S-box 1:
+			\begin{itemize}
+				\item S1 bit 1: $AB'C'+A'B'C+BCD'+ABD+BC'D$
+				\item S1 bit 2: $AD'+B'D'+A'BC+ABC'$
+			\end{itemize}
+			\item S1 requires 7 OR operations, all of which must be done with Toffoli gates.
+			\item Compared to the brute-force method, this takes even more gates!
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Number of Gates: S-Box Input and Output}
+		\begin{itemize}
+			\item Assume 3 Pauli-X gates and 1 Toffoli gate per single S-box calculation.
+			\item For input, 4 CNOT gates are required.
+			\item To copy the output, 2 more CNOT gates are required.
+			\item To make this reversible, S-box application and input processes must be reversed, requiring 2 S-Box applications and 8 CNOT gates.
+			\item[$\Rightarrow$] Total of 10 CNOT gates, 6 Pauli-X gates, and 2 Toffoli gates.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Number of Gates: Apply Rounds}
+		\begin{itemize}
+			\item Two S-Boxes are applied per round.
+			\begin{itemize}
+				\item The remaining operations are all permutations.
+			\end{itemize}
+			\item There are two rounds in total.
+			\item[$\Rightarrow$] Total of 40 CNOT gates, 24 Pauli-X gates, and 8 Toffoli gates per single oracle call!
+		\end{itemize}
+	\end{frame}
+\end{document}

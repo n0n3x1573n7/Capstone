@@ -48,9 +48,9 @@
             \item Break the S-Boxes into fundamental and/or/not-gates
             \item Letting the input bits into S-Boxes $ABCD$:
             \begin{itemize}
-                \item S0 bit 1: $AB'C'+A'B'C+BCD'+ABD+BC'D$
-                \item S0 bit 2: $AD'+B'D'+A'BC+ABC'$
-                \item S1 bit 1: $AB'C'+ACD+A'CD'+A'BD'$
+                \item S1 bit 1: $AB'C'+A'B'C+BCD'+ABD+BC'D$
+                \item S1 bit 2: $AD'+B'D'+A'BC+ABC'$
+                \item S2 bit 1: $AB'C'+ACD+A'CD'+A'BD'$
                 \item S2 bit 2: $B'C'D+AB'C+BCD+BC'D'$
             \end{itemize}
             \item Directly calculating this would cause too many ancilla bits to use, i.e. for each and/or operation, one ancilla bit is required.
@@ -103,7 +103,7 @@
         \begin{itemize}
             \item Still a hypothetical yet.
             \item The structure of Quine-McCluskey simplified S-Box is similar to Brute-force
-            \item The number of terms may decrease significantly, and one ancilla bit can definitely be removed.
+            \item The number of terms may decrease significantly, and one ancilla bit may be removed compared to the first circuit.
             \item Needs further testing...
         \end{itemize}
     \end{frame}
