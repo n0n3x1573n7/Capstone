@@ -5,7 +5,7 @@ from collections import Counter
 from pickle import dumps, loads
 
 try:
-	keycount=loads(open('analysis.pkl','rb').read())
+	keycount=loads(open('analysis_key.pkl','rb').read())
 except:
 	keycount=Counter()
 	for p, k in product(product('01',repeat=8), product('01',repeat=10)):
