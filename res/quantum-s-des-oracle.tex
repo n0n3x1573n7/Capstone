@@ -19,19 +19,19 @@
 \begin{document}
     \begin{frame}{Quantumizing S-DES}
         \begin{itemize}
-            \item Most parts are permutations or compressions; no problems here.
-            \item Two parts poses a challenge:
+            \item Most parts are permutations(or direct compressions); no problems here.
+            \item Two parts pose a challenge:
+	        \begin{enumerate}
+	            \item Expansion
+	            \item S-Boxes
+	        \end{enumerate}
         \end{itemize}
-        \begin{enumerate}
-            \item S-Boxes
-            \item Expansion
-        \end{enumerate}
     \end{frame}
 
     \begin{frame}{Dealing with Expansions}
         \begin{itemize}
             \item Due to \href{https://en.wikipedia.org/wiki/No-cloning_theorem}{No-cloning theorem}, directly copying a qubit is not possible.
-            \item Use XOR(CNOT) operation to copy the information.
+            \item Use CNOT gate to perform XOR operation to copy the information.
         \end{itemize}
     \end{frame}
 

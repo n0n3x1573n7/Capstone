@@ -65,9 +65,9 @@
 	
 	\begin{frame}{Number of Gates: Quine-McCluskey S-Box}
 		\begin{itemize}
-			\item Using De Morgan's Law($A+B=(A'B')'$), we can implement the OR gate with (seemingly) 3 Pauli-X and Toffoli(for CCNOT).
-			\item However since we need to revert $A$ and $B$ back to the original state, 2 more Pauli-X are required, scoring a total of 5.
-			\item The total number of gates required are therefore:
+			\item Using De Morgan's Law($A+B=(A'B')'$), we can implement the OR gate with 3 Pauli-X and one Toffoli(for CCNOT).
+			\item However since we need to revert $A$ and $B$ back to the original state, 2 more Pauli-X are required, totaling 5 usages.
+			\item The total number of gates required theoretically are therefore:
 			\begin{center}
 				\begin{tabular}{c|c|c}
 					& Pauli-X & Toffoli \\\hline
@@ -75,7 +75,7 @@
 					S-box 2 & 40      & 6
 				\end{tabular}
 			\end{center}
-			\item Comparing with the Brute-force method, the required number of Toffoli gates are less than halved, while Toffoli gates shows a small decrease.
+			\item Comparing with the Brute-force method, the required number of Toffoli gates are less than halved, while Pauli-X gates shows a small decrease.
 		\end{itemize}
 	\end{frame}
 	
