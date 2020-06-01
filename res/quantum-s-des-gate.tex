@@ -37,7 +37,7 @@
 					S-box 2 & 44      & 15
 				\end{tabular}
 			\end{center}
-			\item On average, \textasciitilde3 Pauli-X gates and \textasciitilde1 Toffoli gate is used.
+			\item On average, \textasciitilde3 Pauli-X gates and \textasciitilde1 Toffoli gate is used per case.
 		\end{itemize}
 	\end{frame}
 	
@@ -60,7 +60,22 @@
 					S-box 2 & 10      & 6
 				\end{tabular}
 			\end{center}
-			\item TODO
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Number of Gates: Quine-McCluskey S-Box}
+		\begin{itemize}
+			\item Using De Morgan's Law($A+B=(A'B')'$), we can implement the OR gate with (seemingly) 3 Pauli-X and Toffoli(for CCNOT).
+			\item However since we need to revert $A$ and $B$ back to the original state, 2 more Pauli-X are required, scoring a total of 5.
+			\item The total number of gates required are therefore:
+			\begin{center}
+				\begin{tabular}{c|c|c}
+					& Pauli-X & Toffoli \\\hline
+					S-box 1 & 46      & 7      \\\hline
+					S-box 2 & 40      & 6
+				\end{tabular}
+			\end{center}
+			\item Comparing with the Brute-force method, the required number of Toffoli gates are more than halved, while Toffoli gates shows a small decrease.
 		\end{itemize}
 	\end{frame}
 	
@@ -74,6 +89,7 @@
 	\end{frame}
 	
 	\begin{frame}{Number of Gates: Apply Rounds}
+		Assuming Brute-force method:
 		\begin{itemize}
 			\item Both S-boxes are applied per round, scoring in for 20 CNOT gates, 94 Pauli-X gates, and 33 Toffoli gates.
 			\begin{itemize}
@@ -81,6 +97,13 @@
 			\end{itemize}
 			\item There are two rounds in total.
 			\item[$\Rightarrow$] Total of 40 CNOT gates, 188 Pauli-X gates, and 66 Toffoli gates per single oracle call!
+		\end{itemize}
+		\smallskip
+		If we apply the Quine-McCluskey method:
+		\begin{itemize}
+			\item CNOT gate does not change.
+			\item The number of Pauli-X drops to 86, and Toffoli to 13!
+			\item[$\Rightarrow$] Dropping the total to 40 CNOT, 172 Pauli-X, and 26 Toffoli.
 		\end{itemize}
 	\end{frame}
 \end{document}
