@@ -7,3 +7,5 @@ def attack(p, c):
 		if sdes(p, k)==c:
 			sol.add(''.join(k))
 	return sol
+
+print(','.join(attack('11000111', '00010100')))
