@@ -8,4 +8,7 @@ def attack(p, c):
 			sol.add(''.join(k))
 	return sol
 
+from time import time
+t=time()
 print(','.join(attack('11000111', '00010100')))
+print(time()-t)
