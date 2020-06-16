@@ -78,8 +78,10 @@
 	
 	\section{연구 결과}
 	
-	
+	S-DES에서 
 	
 	\section{향후 연구 계획}
+	
+	해당 implementation에 대해서 가장 문제가 되었던 부분은 임의의 Plaintext $P$, Ciphertext $C$쌍에 대해 $\{K|C=SDES(P,K)\}$ 의 크기, 즉 Key count가 다르다는 것에 있었다. Grover's Algorithm은 solution set의 크기에 따라 iteration 수를 다르게 해야하는데, 이 수가 균일하지 않다는 것은 Key count를 미리 알아야만 이 Attack을 수행할 수 있다는 것을 의미한다.
 	
 \end{document}
