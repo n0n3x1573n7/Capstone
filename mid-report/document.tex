@@ -19,6 +19,12 @@
 \usepackage{standalone}
 \usepackage{multirow}
 
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{quantikz}
+\usepackage{braket}
+
+
 \usepackage[linguistics]{forest}
 
 \setlength{\droptitle}{-3em}
@@ -78,10 +84,40 @@
 	
 	\section{연구 결과}
 	
-	S-DES에서 
+	S-DES의 구조는 대부분이 permutation(또는 compression)이기 때문에 큰 문제가 되지 않는다. 하지만 Expansion과 S-Box의 두 부분에서는 문제가 될 수 있다. Expansion의 경우에는 CNOT gate를 사용하여 정보를 복사한다면 비교적 쉽게 해결할 수 있겠지만, S-Box의 경우에는 Lookup table으로 구성되어 있어 이에 대한 해결방안이 필요하다.
+	
+	그러기 위해 생각한 방안이 다음과 같은 회로를 사용한 Brute-forcing method이다:
+	
+	\begin{center}
+		\begin{tikzpicture}
+		\node[scale=0.6] {
+			\begin{quantikz}
+			\lstick{$\ket{In_3}$} & \gate{X} & \ctrl{1} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{1} & \gate{X} & \qw  \rstick{$\ket{In_3}$} \\
+			\lstick{$\ket{In_2}$} & \qw & \ctrl{3} & \qw & \qw & \qw & \qw & \qw & \qw & \ctrl{3} & \qw & \qw \rstick{$\ket{In_2}$} \\
+			\lstick{$\ket{In_1}$} & \gate{X} & \qw & \ctrl{3} & \qw & \qw & \qw & \qw & \ctrl{3} & \qw & \gate{X} & \qw \rstick{$\ket{In_1}$} \\
+			\lstick{$\ket{In_0}$} & \gate{X} & \qw & \qw & \ctrl{3} & \qw & \qw & \ctrl{3} & \qw & \qw & \gate{X} & \qw \rstick{$\ket{In_0}$} \\[0.2cm]
+			\lstick{$\ket{0}$} & \qw & \targ{} & \ctrl{1} & \qw & \qw & \qw & \qw & \ctrl{1} & \targ{} & \qw & \qw \rstick{$\ket{0}$} \\
+			\lstick{$\ket{0}$} & \qw & \qw & \targ{} & \ctrl{1} & \qw & \qw & \ctrl{1} & \targ{} & \qw & \qw & \qw \rstick{$\ket{0}$} \\
+			\lstick{$\ket{0}$} & \qw & \qw & \qw & \targ{} & \ctrl{1} & \ctrl{2} & \targ{} & \qw & \qw & \qw & \qw \rstick{$\ket{0}$} \\[0.2cm]
+			\lstick{$\ket{0}$} & \qw & \qw & \qw & \qw & \targ{} & \qw & \qw & \qw & \qw & \qw & \qw \rstick{$\ket{Out_1}$} \\
+			\lstick{$\ket{0}$} & \qw & \qw & \qw & \qw & \qw & \targ{} & \qw & \qw & \qw & \qw & \qw \rstick{$\ket{Out_0}$}\\
+			\end{quantikz}
+		};
+		\end{tikzpicture}
+	\end{center}
+	
+	이 회로의 경우 S-Box 1에서 input으로 4(0010)가 들어왔을 때 output으로 3(11)이 나간다는 것을 표현하고 있다. 각 16개의 possibility에 대해 위와 같은 회로를 구성할 수 있고, 이를 연결하여 S-Box를 구현할 수 있다.
+	
+	다른 방법으로 Quine-McCluskey Algorithm을 통해 S-Box를 minimize 하여 And/Or/Not gate를 활용하는 방안을 생각할 수 있다. 하지만 이 경우 And/Or circuit은 모두 CCNOT gate를 활용해야 하고, 이를 활용하기 위해서는 Ancilla qubit, 즉 추가 Qubit이 필요하여 시공간적인 부담이 커지게 된다.
+	
+	이를 보완하기 위해 Quine-McCluskey Algorithm으로 minimize된 S-Box를 위의 Brute-forcing method와 비슷한 회로를 사용해 구현하는 Hybrid 방법을 생각해보았지만, 이를 직접 구현하지는 않았다. S-DES의 경우 Static S-Box를 사용하지만 Dynamic S-Box를 사용하는 Cryptosystem의 경우 Quine-McCluskey를 사용하는 것이 오히려 Time loss일 가능성이 생기기 때문이다.
+	
+	게이트 분석의 경우 실제 Quantum computer에서 Qubit 수의 제한이 없어진다면 가장 중요하게 사용될 Complexity의 Measure이기 때문에 그 개수를 각 게이트의 종류별로 세었다. Brute-force에서는 oracle call 1회당 40회의 CNOT gate, 188회의 Pauli-X gate, 66회의 CCNOT(Toffoli) gate를 사용하고, Hybrid에서는 40회의 CNOT gate, 172회의 Pauli-X gate, 26회의 CCNOT gate를 사용한다. Quine-McCluskey만을 사용하는 경우 Hybrid와 동일하거나 그보다 조금 많은 수준에서 그칠 것이나, Qubit 수에 제한이 있는 현재로서는 사용할 수 없는 방법이기 때문에 계산하지 않았다.
 	
 	\section{향후 연구 계획}
 	
-	해당 implementation에 대해서 가장 문제가 되었던 부분은 임의의 Plaintext $P$, Ciphertext $C$쌍에 대해 $\{K|C=SDES(P,K)\}$ 의 크기, 즉 Key count가 다르다는 것에 있었다. Grover's Algorithm은 solution set의 크기에 따라 iteration 수를 다르게 해야하는데, 이 수가 균일하지 않다는 것은 Key count를 미리 알아야만 이 Attack을 수행할 수 있다는 것을 의미한다.
+	해당 implementation에 대해서 가장 문제가 되었던 부분은 임의의 Plaintext $P$, Ciphertext $C$쌍에 대해 $\{K|C=SDES(P,K)\}$ 의 크기, 즉 Key count가 다르다는 것에 있었다. Grover's Algorithm은 총 가능한 경우의 수에 대해 실제 존재하는 해의 개수의 비율에 따라 Iteration 수를 다르게 해야하는데, 이 수가 균일하지 않다는 것은 Key count를 미리 알아야만 이 Attack을 수행할 수 있다는 것을 의미한다.
+	
+	2학기에는 해당 문제를 Address하는 것을 목표로 할 예정이다. 보다 정확하게는, Quantum oracle이 주어졌을 때, 실제 존재하는 해의 개수를 알지 못하고도 Grover's Algorithm의 Iteration을 최적화하는 방법에 대해 연구를 진행할 계획이다.
 	
 \end{document}
