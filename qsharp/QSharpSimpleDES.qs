@@ -22,6 +22,30 @@
         PermuteQubits([4,0,1,2,3,9,5,6,7,8], key);
     }
 
+    operation SBoxApplySingleObsolete(EP : Qubit[], Q : Qubit[], input : Int, output : Int) : Unit is Adj {
+        using (ancilla = Qubit[3]) {
+            within {
+                // apply NOT to zero-bits
+                // r0 c0 c1 r0
+                for(index in 0..3) {
+                    if(And(input, 8 >>> index) == 0) {
+                        X(EP[index]);
+                    }
+                }
+                CCNOT(EP[0], EP[1], ancilla[0]);
+                CCNOT(EP[2], ancilla[0], ancilla[1]);
+                CCNOT(EP[3], ancilla[1], ancilla[2]);
+            }
+            apply {
+                for(index in 0..1) {
+                    if(And(output, (2 >>> index)) != 0) {
+                        CNOT(ancilla[2], Q[index]);
+                    }
+                }
+            }
+        }
+    }
+
     /// # Summary
     /// Apply S-Box for each candidate input and alter Q if applicable.
     ///
@@ -41,22 +65,20 @@
     /// S-Box output binary value.
     ///
     operation SBoxApplySingle(EP : Qubit[], Q : Qubit[], input : Int, output : Int) : Unit is Adj {
-        using (ancilla = Qubit[3]) {
-            let allOneOracle4 = Oracle_ArbitraryPattern_Reference(_, _, [true, true, true, true]);
-            within {
-                // apply NOT to zero-bits
-                // r0 c0 c1 r0
-                for(index in 0..3) {
-                    if(And(input, 8 >>> index) == 0) {
-                        X(EP[index]);
-                    }
+        let allOneOracle4 = Oracle_ArbitraryPattern_Reference(_, _, [true, true, true, true]);
+        within {
+            // apply NOT to zero-bits
+            // r0 c0 c1 r0
+            for(index in 0..3) {
+                if(And(input, 8 >>> index) == 0) {
+                    X(EP[index]);
                 }
             }
-            apply {
-                for(index in 0..1) {
-                    if(And(output, (2 >>> index)) != 0) {
-                        allOneOracle4(EP, Q[index]);
-                    }
+        }
+        apply {
+            for(index in 0..1) {
+                if(And(output, (2 >>> index)) != 0) {
+                    allOneOracle4(EP, Q[index]);
                 }
             }
         }
@@ -203,7 +225,7 @@
                 within {
                     PermuteQubits([0,1,3,5,7,2,4,6,9,8], key);
                 }
-                // Step 4-3.    Apply 1st Round
+                // Step 4-3.    Apply 2nd Round
                 apply {
                     ApplyRound(pqubits, key[2..9]);
                 }
@@ -285,16 +307,18 @@
         // #1 : 0b00010000, 0b00110011, {0b1100010011}
         // #2 : 0b10100101, 0b00110110, {'0011011111', '0010010111'}
         // #4 : 0b11000111, 0b00010100, {0b1001010000, 0b0110010101, 0b0111011101, 0b1000011000}
-        let plaintext   = 0b11000111;
-        let key         = 0b0111011101;
-        let cipher      = 0b00010100;
+        let plaintext   = 0b10100100;
+        let key         = 0b1101100110;
+        let cipher      = 0b01110010;
 
-        Message("S-DES Cryptanalysis with Grover's Algorithm\n");
+        Message("S-DES Cryptanalysis with Grover's Algorithm");
+        Message("");
 
         Message($"  [+] Plaintext           : {plaintext}");
         Message($"  [+] Original Key        : {key}");
         Message($"  [+] Expected Cipher     : {cipher}");
-        Message("\n");
+        Message("");
+
         Message("[*] Checking if cipher match...");
         let doesCipherMatch = EncryptSDES(plaintext, cipher, key);
 
