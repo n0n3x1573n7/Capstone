@@ -20,7 +20,7 @@
 %\usepackage{lipsum}
 \usepackage{standalone}
 \usepackage{multirow}
-
+\usepackage{wrapfig}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{quantikz}
@@ -126,7 +126,15 @@
         \item S-Box 결과 저장 용도 4-qubit
         \item S-Box에서 사용할 여분의 3-qubit
     \end{itemize}
-    프로그램이 48GB를 할당하고 비정상종료되어 최대한 큐빗의 개수를 줄이는 방향을 택했고, 네 가지 요인으로 줄일 수 있었다. 첫째로 암호화 중간과정의 qubit은 input plaintext qubit을 그대로 이용하면 되기에 필요하지 않았다. 둘째로 expanded plaintext 때문에 qubit을 복제할 필요 없이, 각 S-Box별로 따로 계산할 수 있다는 성질을 이용하였다. 셋째로 S-Box를 독립적으로 계산하면서 필요한 qubit의 개수가 4개에서 2개로 감소하였다. 넷째로 위에서 나왔던 brute-forcing method에서 필요했던 3개의 ancilla qubit을 Microsoft Q\#의 controlled functor를 이용해 제거하였다.
+    
+    \begin{wrapfigure}{r}{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{./qsharp_exec.PNG}
+        \caption{구현체 실행 화면}
+        \label{fig:qsharp_exec}
+    \end{wrapfigure}
+    
+    프로그램이 48GB를 할당하고 비정상 종료되어 최대한 큐빗의 개수를 줄이는 방향을 택했고, 네 가지 요인으로 줄일 수 있었다. 첫째로 암호화 중간과정의 qubit은 input plaintext qubit을 그대로 이용하면 되기에 필요하지 않았다. 둘째로 expanded plaintext 때문에 qubit을 복제할 필요 없이, 각 S-Box별로 따로 계산할 수 있다는 성질을 이용하였다. 셋째로 S-Box를 독립적으로 계산하면서 필요한 qubit의 개수가 4개에서 2개로 감소하였다. 넷째로 위에서 나왔던 brute-forcing method에서 필요했던 3개의 ancilla qubit을 Microsoft Q\#의 controlled functor를 이용해 제거하였다.
     
     결과적으로 프로그램에 필요한 qubit은 21개이다.
     \begin{itemize}
@@ -135,10 +143,19 @@
         \item 암호화 오라클 용도 1-qubit
         \item S-Box 결과 저장 용도 2-qubit
     \end{itemize}
-    구현 결과 Grover's Algorithm까지 포함하여 암호화 오라클을 26번 호출하는 과정이 약 72초 소모되어, 한 오라클 쿼리에 약 2-3초 내외 소모되었다. 메모리도 최대 54 MB 정도를 차지하였다.
+    구현 결과 Grover's Algorithm까지 포함하여 암호화 오라클을 26번 호출하는 과정이 약 72초 소모되어, 한 오라클 쿼리에 약 2-3초 내외 소모되었다. 메모리도 최대 54 MB 정도를 차지하였다. 실행 화면은 그림 \ref{fig:qsharp_exec}과 같다.
     
 	\section{향후 연구 계획}
 	
 	해당 implementation에 대해서 가장 문제가 되었던 부분은 임의의 Plaintext $P$, Ciphertext $C$쌍에 대해 $\{K|C=SDES(P,K)\}$ 의 크기, 즉 Key count가 다르다는 것에 있었다. 그러나 선행 연구에서 해의 개수가 알려지지 않았을 때도 효율적으로 Grover iteration을 수행하면 최적의 시간 복잡도로 계산할 수 있음이 알려져 있었다. 때문에 추후 연구 과제는 홍석희 교수님과의 면담을 통해 이어서 진행해볼 예정이다.
 	
+    \section*{별첨}
+    
+    별첨 문서의 목록은 다음과 같다.
+    \begin{itemize}
+    \item \verb|./cisc| : 2020 한국정보보호학회 한국정보보호학회 하계학술대회(\url{http://www.cisc.or.kr/})에 제출한 최종논문이 포함되어 있다. 본 연구의 핵심과 참고 문헌이 기술되어 있다.
+    \item \verb|./qsharp| : Microsoft Q\#으로 작성한 S-DES 암호화 알고리즘 및 Grover's Algorithm 프로젝트 파일이 포함되어 있다. Grover's Algorithm 코드는 \url{https://github.com/microsoft/QuantumKatas/blob/master/GroversAlgorithm/ReferenceImplementation.qs}을 참고하였다.
+    \item \verb|./presentation.pdf| : 연구를 진행하면서 작성해온 발표 자료이다.
+    \item \verb|./py_sdes| : Python으로 구현한 S-DES이다. \verb|sdes.py|를 통해 암호화를 할 수 있고 \verb|attk.py|를 통해 brute-force를 통해 평문과 암호문이 주어졌을 때 해당하는 key를 전부 구할 수 있다.
+    \end{itemize}
 \end{document}
