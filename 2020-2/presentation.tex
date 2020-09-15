@@ -175,7 +175,7 @@
 \definecolor{ppurple}{HTML}{9F4C7C}
 
 
-\title{Insert Title Here}
+\title{Optimizing Quantum Oracle for Standard Hash Algorithms}
 %\subtitle{Week 7 Report for Class 75}
 
 \author{Korea University\\Sangheon Lee, Mingyu Cho}
@@ -197,14 +197,23 @@
         \begin{itemize}
             \item Studied the basics of quantum computing and Grover's Algorithm
             \item Analysis of reversible quantum S-DES oracle and its construction
-            \item Implementation of quantum S-DEs oracle with Grover's Algorithm in Microsoft Q\#
+            \item Implementation of quantum S-DES oracle with Grover's Algorithm in Microsoft Q\#
         \end{itemize}
     \end{frame}
     
     \begin{frame}{Motivation}
         % why SHA-2/3? why preimage attack (or collision attack, nvm)
         \begin{itemize}
-            \item (blah blah blah)
+          \item Targeting SHA-2/3
+          \begin{itemize}
+            \item Current de facto standard hash algorithm
+          \end{itemize}
+          \item Goal is to perform a preimage attack.
+          \begin{itemize}
+            \item The most straightforward to apply Grover's Algorithm.
+            \item It will be assumed that Grover's Algorithm(or some variation of it) will be applied
+            \item Therefore target is to optimize the quantum oracle for SHA-2/3.
+          \end{itemize}
         \end{itemize}
     \end{frame}
     
@@ -234,8 +243,16 @@
     \end{frame}
     
     \begin{frame}{Expectations}
-        % we will focus on micro-scale improvement 
-        (blah blah blah)
+      \begin{itemize}
+        \item Focus on micro-scale improvement(regarding quantum oracle)
+        \item May be able to reduce the cost in at least one of the following metrics:
+          \begin{itemize}
+            \item The cost metric from before
+            \item The raw number of gates
+            \item The number of levels after achieving parallelization
+          \end{itemize}
+        \item Main target will be the cost metric, not the gates or the levels
+      \end{itemize}
     \end{frame}
     
     \section{In-depth Topics}
