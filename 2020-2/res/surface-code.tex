@@ -17,7 +17,8 @@
 
 \begin{document}
 
-    \begin{frame}{Background: surface code and physical qubits}
+    \subsection{Background}
+    \begin{frame}{Surface code and physical qubits}
         This summary is heavily based on \cite{Fowler_2012}.
         \begin{itemize}
             \item Surface code is a method to construct \textit{logical} qubits from physical qubits with acceptable relativce error tolerance \cite{calderbank1997quantum}
@@ -30,8 +31,7 @@
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{Background: surface code and physical qubits}
-        This summary is heavily based on \cite{Fowler_2012}.
+    \begin{frame}{Surface code and physical qubits}
         \begin{itemize}
             \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
             \begin{itemize}
@@ -42,8 +42,7 @@
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{Background: surface code and physical qubits}
-        This summary is heavily based on \cite{Fowler_2012}.
+    \begin{frame}{Surface code and physical qubits}
         \begin{itemize}
             \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
             \begin{itemize}
@@ -57,7 +56,33 @@
             \end{itemize} 
         \end{itemize}
     \end{frame}
-
-                    
     
+    \subsection{Introduction}
+    \begin{frame}{Introduction: Qubit operators}
+        Quantum computation is based on qubits: two-level quantum systems
+        \begin{itemize}
+            \item Based on quantum physics and election spins
+        \end{itemize}
+        These electron spins can be reprensented by various operators such as Pauli-X, Y, Z operators.
+    \end{frame}        
+    \begin{frame}{Introduction: Qubit operators}
+        Basic recap of Pauli operators and qubit operators:
+        \begin{itemize}
+            \item Ground state for $\shat{Z}$ axis : $\ket{g} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$
+            \item Excited state : $\ket{e} = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$
+            \item $\shat{Z} = \hat{\sigma_z} = \begin{pmatrix}
+            1 & 0 \\
+            0 & -1
+            \end{pmatrix}$, with eigenvalues $+1$ and $-1$ for $\ket{g}$, $ \ket{e} $.
+            \item $\shat{X} = \hat{\sigma_x} = \begin{pmatrix}
+            0 & 1 \\
+            1 & 0
+            \end{pmatrix}$, with eigenvalues $+1$ and $-1$ for $\ket{+} = \frac{1}{\sqrt{2}}\begin{psmallmatrix} 1 \\ 1 \end{psmallmatrix} = \frac{1}{\sqrt{2}}(\ket{g} + \ket{e})$, $\ket{-} = \frac{1}{\sqrt{2}}\begin{psmallmatrix} 1 \\ -1 \end{psmallmatrix} = \frac{1}{\sqrt{2}}(\ket{g} - \ket{e})$.
+            \item $\shat{Y} = -i\hat{\sigma_y} = \shat{Z}\shat{X} = \begin{pmatrix}
+            0 & 1 \\
+            -1 & 0
+            \end{pmatrix}$, which is real unlike $ \hat{\sigma_y} $.
+        \end{itemize}
+    \end{frame}        
+
 \end{document}

@@ -16,7 +16,7 @@
 \setmainfont[ItalicFont={*},ItalicFeatures={FakeSlant=.167}]{D2Coding}
 
 \usepackage[normalem]{ulem}
-
+\usepackage{mathtools}
 \usepackage{graphicx}
 \usepackage{tikz}
 %\usetikzlibrary{quantikz}
@@ -182,6 +182,8 @@
 
 \date{\today}
 
+\newcommand{\shat}[1]{\skew{4.5}\hat{#1}}
+
 \begin{document}
     \begin{frame}
         \titlepage
@@ -267,6 +269,7 @@
     \section{Surface Code}
     \input{./res/surface-code.tex}
     
+    \section{References}
     \begin{frame}[allowframebreaks]
         \frametitle{References}
         \bibliographystyle{amsalpha}
