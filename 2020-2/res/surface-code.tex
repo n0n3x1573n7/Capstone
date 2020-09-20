@@ -64,8 +64,9 @@
             \item Based on quantum physics and election spins
         \end{itemize}
         These electron spins can be reprensented by various operators such as Pauli-X, Y, Z operators.
-    \end{frame}        
-    \begin{frame}{Introduction: Qubit operators}
+    \end{frame} 
+           
+    \begin{frame}{Qubit operators}
         Basic recap of Pauli operators and qubit operators:
         \begin{itemize}
             \item Ground state for $\shat{Z}$ axis : $\ket{g} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}$
@@ -83,6 +84,46 @@
             -1 & 0
             \end{pmatrix}$, which is real unlike $ \hat{\sigma_y} $.
         \end{itemize}
-    \end{frame}        
+    \end{frame}
+    
+    \begin{frame}{Qubit operators}
+        These qubit operators satisfy the following:
+        \begin{equation}
+        \begin{split}
+            \shat{X}^2 &= -\shat{Y}^2 = \shat{Z}^2 = I \\
+            \shat{X}\shat{Z} &= -\shat{Z}\shat{X} \\
+            [\shat{X},\shat{Y}] &= \shat{X}\shat{Y} - \shat{Y}\shat{X} = -2\shat{Z}
+        \end{split}
+        \end{equation}
+        Also note that each measurement based on each quantum operators yields one of its eigenstates. For example, $M_Z$ will return $ \ket{g} $ or $ \ket{e} $, while $ M_X $ will return $ \ket{+} $ or $ \ket{-} $.
+    \end{frame} 
+
+    \begin{frame}{Single-qubit errors}
+        Qubits errors are random $ \shat{X} $ bit-flip and/or $ \shat{Z} $ phase-flip.
+        \begin{itemize}
+            \item These single-qubit errors can be undone after detection
+            \begin{itemize}
+                \item Erroneous $ \shat{Z} $ can be cancelled with another $ \shat{Z} $ since $ \shat{Z}^2 = I $
+            \end{itemize}
+            \item Also, applying qubit operation does not alter the probability of its eigenstate
+        \end{itemize}
+        Thus detection, rather than correction, is the key point of surface code.
+    \end{frame}
+    
+    \begin{frame}{Single-qubit errors}
+        \begin{itemize}
+            \item However since $ [\shat{X}, \shat{Z}] \neq \hat{0} $, sequential measurements of $ \shat{X} $ and $ \shat{Z} $ might conflict each other (since $ \shat{X}\shat{Z} \neq \shat{Z}\shat{X} $).
+            \item This problem can be avoided by measuring multi-qubits at once. Consider qubit $ a $ and $ b $ and operation $ \sshat{X_a}\sshat{X_b} $ and $ \sshat{Z_a}\sshat{Z_b} $, then these two operations do commute!
+        \end{itemize}
+        \begin{equation}
+        \begin{split}
+        [\sshat{X_a}\sshat{X_b}, \sshat{Z_a}\sshat{Z_b}] &= (\sshat{X_a}\sshat{X_b})(\sshat{Z_a}\sshat{Z_b}) - (\sshat{Z_a}\sshat{Z_b})(\sshat{X_a}\sshat{X_b}) \\
+        &= \sshat{X_a}\sshat{Z_a}\sshat{X_b}\sshat{Z_b} - \sshat{Z_a}\sshat{X_a}\sshat{Z_b}\sshat{X_b} \\
+        &= (-\sshat{Z_a}\sshat{X_a})(-\sshat{Z_b}\sshat{X_b}) - (\sshat{Z_a}\sshat{X_a})(\sshat{Z_b}\sshat{X_b}) \\
+        &= \hat{0}
+        \end{split}
+        \end{equation}
+    \end{frame}
+    
 
 \end{document}
