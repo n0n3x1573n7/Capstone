@@ -1,0 +1,63 @@
+\documentclass{beamer}
+\usetheme{Darmstadt}
+\usepackage{CJKutf8}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1, T2A]{fontenc}
+\usepackage{fontspec}
+\usepackage[normalem]{ulem}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{braket}
+
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{tikz}
+
+\begin{document}
+
+    \begin{frame}{Background: surface code and physical qubits}
+        This summary is heavily based on \cite{Fowler_2012}.
+        \begin{itemize}
+            \item Surface code is a method to construct \textit{logical} qubits from physical qubits with acceptable relativce error tolerance \cite{calderbank1997quantum}
+            \item Logical qubits are more efficient than their physical counterparts
+            \item The tolerance of surface codes to errors is high as about 1\%
+            \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
+            \begin{itemize}
+                \item ``We assume an error rate approximately one-tenth the threshold rate, which implies that we need about 14,500 physical qubits per logical qubit to give a sufficiently low logical error rate to successfully execute the algorithm"
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Background: surface code and physical qubits}
+        This summary is heavily based on \cite{Fowler_2012}.
+        \begin{itemize}
+            \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
+            \begin{itemize}
+                \item ``A much larger part of the surface code is however needed to generate and purify the special ancilla $\ket{A_L}$ states that are used in the Toffoli gates.""
+                \item Applying Shor's Algorithm to 2,000-bit integer requires $ 2.2 \times 10^{12} \ket{A_L}$ states and takes about 26.7 hours
+                \item The surface code needs to generate these states in a timely manner
+            \end{itemize}
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Background: surface code and physical qubits}
+        This summary is heavily based on \cite{Fowler_2012}.
+        \begin{itemize}
+            \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
+            \begin{itemize}
+                \item ``We assume an error rate approximately one-tenth the threshold rate, which implies that we need about 14,500 physical qubits per logical qubit to give a sufficiently low logical error rate to successfully execute the algorithm"
+                \item In result, 58 million qubits are required for computation
+                \item Additionally 1 billion qubits are required for generating $\ket{A_L}$ states
+            \end{itemize}
+            \item Hopefully, ``the size of the quantum computer is quite sensitive tothe error rate in the physical qubits.''
+            \begin{itemize}
+                \item ``For example, improving the overall error rate by about a factor of ten, as detailed in Appendix M, can reduce the number of physical qubits by about an order of magnitude, to about 130 million, although leaving the execution time unchanged.''
+            \end{itemize} 
+        \end{itemize}
+    \end{frame}
+
+                    
+    
+\end{document}
