@@ -31,18 +31,18 @@
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{Surface code and physical qubits}
+    \begin{frame}[t]{Surface code and physical qubits}
         \begin{itemize}
             \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
             \begin{itemize}
-                \item ``A much larger part of the surface code is however needed to generate and purify the special ancilla $\ket{A_L}$ states that are used in the Toffoli gates.""
+                \item ``A much larger part of the surface code is however needed to generate and purify the special ancilla $\ket{A_L}$ states that are used in the Toffoli gates."
                 \item Applying Shor's Algorithm to 2,000-bit integer requires $ 2.2 \times 10^{12} \ket{A_L}$ states and takes about 26.7 hours
                 \item The surface code needs to generate these states in a timely manner
             \end{itemize}
         \end{itemize}
     \end{frame}
     
-    \begin{frame}{Surface code and physical qubits}
+    \begin{frame}[t]{Surface code and physical qubits}
         \begin{itemize}
             \item However, ensuring high tolerance requires massive physical qubits and sequential Toffoli gates
             \begin{itemize}
@@ -58,7 +58,7 @@
     \end{frame}
     
     \subsection{Introduction}
-    \begin{frame}{Introduction: Qubit operators}
+    \begin{frame}{Qubit operators}
         Quantum computation is based on qubits: two-level quantum systems
         \begin{itemize}
             \item Based on quantum physics and election spins
@@ -90,13 +90,30 @@
         These qubit operators satisfy the following:
         \begin{equation}
         \begin{split}
-            \shat{X}^2 &= -\shat{Y}^2 = \shat{Z}^2 = I \\
+            \shat{X}\,^2 &= -\shat{Y}\,^2 = \shat{Z}\,^2 = I \\
             \shat{X}\shat{Z} &= -\shat{Z}\shat{X} \\
             [\shat{X},\shat{Y}] &= \shat{X}\shat{Y} - \shat{Y}\shat{X} = -2\shat{Z}
         \end{split}
+        \label{eq:quant_op}
         \end{equation}
         Also note that each measurement based on each quantum operators yields one of its eigenstates. For example, $M_Z$ will return $ \ket{g} $ or $ \ket{e} $, while $ M_X $ will return $ \ket{+} $ or $ \ket{-} $.
-    \end{frame} 
+    \end{frame}
+    
+    \begin{frame}{Qubit operators}
+        \begin{itemize}
+            \item Any two-level quantum system that satisfies (\ref{eq:quant_op}) can be used as a qubit.
+            \item There are infinitely many quantum states...
+            \item Hopefully, Solovay–Kitaev theorem states that an arbitrary quantum gate can be approximated by a reasonably short sequence of universial gates.
+            \begin{itemize}
+                \item An $m$ constant qubit gate can be approximated to an $ \epsilon $-error by $ \mathcal{O}(m \log^c(m/\epsilon)) $ for some $ c $.
+            \end{itemize}
+            \item One of the common quantum universial gate set is `Clifford + T' gate set: CNOT, $ \shat{H} $(Hadamard gate), $ \shat{S} $ and $ \shat{T} $.\footnote{$ T^4 = S^2 = Z = R_\pi$, where $ R_\theta = \begin{psmallmatrix}
+            1 & 0 \\
+            0 & e^{i\theta}
+            \end{psmallmatrix} $.}
+        \end{itemize}
+    \end{frame}
+    
 
     \begin{frame}{Single-qubit errors}
         Qubits errors are random $ \shat{X} $ bit-flip and/or $ \shat{Z} $ phase-flip.
