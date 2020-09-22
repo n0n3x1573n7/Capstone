@@ -140,7 +140,80 @@
         &= \hat{0}
         \end{split}
         \end{equation}
+        Therefore $ \sshat{X_a}\sshat{X_b} $ and $ \sshat{Z_a}\sshat{Z_b} $ can be used as basis of 2-qubit system.
     \end{frame}
+    
+    \begin{frame}{Single-qubit errors}
+        In this case, the following are the (entangled) eigenstates, which does not change its state after measurements by $ \sshat{X_a}\sshat{X_b} $ or $ \sshat{Z_a}\sshat{Z_b} $.
+        \begin{table}[h]
+            \begin{tabular}{|c|c|c|}
+                \hline
+                $ \sshat{Z_a}\sshat{Z_b} $ & $ \sshat{X_a}\sshat{X_b} $ & $ \ket{\psi} $ \\ \hline
+                $ +1 $ & $ +1 $ & $ (\ket{gg} + \ket{ee})/\sqrt{2} $ \\ \hline
+                $ +1 $ & $ -1 $ & $ (\ket{gg} - \ket{ee})/\sqrt{2} $ \\ \hline
+                $ -1 $ & $ +1 $ & $ (\ket{ge} + \ket{eg})/\sqrt{2} $ \\ \hline
+                $ -1 $ & $ -1 $ & $ (\ket{ge} - \ket{eg})/\sqrt{2} $ \\ \hline
+            \end{tabular}
+        \end{table}
+        For example, if $ \ket{\psi} = (\ket{gg} - \ket{ee})/\sqrt{2}$, then $ \sshat{Z_a}\sshat{Z_b}\ket{\psi} = \ket{\psi} $ and $ \sshat{X_a}\sshat{X_b}\ket{\psi} = -\ket{\psi} $ since $ (+1, -1) $ are its eigenvalues.
+    \end{frame}
+    
+    \begin{frame}{Single-qubit errors}
+        If there is an random $ \shat{X} $ or $ \shat{Z} $ error on a single qubit, the original eigenstate will change into another eigenstate.
+        \begin{itemize}
+            \item If $ \ket{\psi} = (\ket{gg} - \ket{ee})/\sqrt{2}$, then $ \sshat{X_a}\ket{psi} = -(\ket{ge} - \ket{eg})/\sqrt{2}$, where eigenvalues changed to $ (-1, -1) $.
+            \item However, $ \sshat{X_b}\ket{psi}$ also yields $ -(\ket{ge} - \ket{eg})/\sqrt{2}$
+            \item Errors can be detected, but cannot be uniqlely identified
+            \item A simple form of error detection code
+        \end{itemize}
+        Operator products such as $ \sshat{X_a}\sshat{X_b} $ or $ \sshat{Z_a}\sshat{Z_b} $ are called stabilizers
+        \begin{itemize}
+            \item Eigenstates are measureable without any quantum information loss
+        \end{itemize}
+    \end{frame}
+    
+    \subsection{Surface Code}
+    \begin{frame}{Surface code structure}
+        The following figure is the implementation of the surface code on a two-dimensional array of physical qubits.
+        
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-overview.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                \only<1>{
+                    \begin{itemize}
+                    \item The open circles are \textit{data qubits} where the computational quantum states are stored.
+                    \item The filled circles are \textit{measurement qubits}.
+                    \item These qubits should be able to perform initialization, single-qubit rotation, CNOT between neighbors, SWAP and $ M_Z $.
+                    \end{itemize}
+                }
+                \only<2>{
+                    \begin{itemize}
+                        \item Measurement qubits are used to stabilize and alter the quantum state of data qubits
+                        \begin{itemize}
+                            \item Two types exist: ``measure-Z'' qubits (colored in green) and ``measure-X'' qubits (colored in yellow)
+                        \end{itemize}
+                        \item Each data qubits are connected to two measure-Z qubits and measure-X qubits
+                    \end{itemize}
+                }
+                \only<3>{
+                    \begin{itemize}
+                        \item Measurement qubits either measures $ \shat{X} $ or $ \shat{Z} $ stabilizer (i.e., $ \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d} $ or $ \sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d} $)
+                        \item Figure (b) and (c) represents the quantum circuit of stabilizer measurement
+                    \end{itemize}
+                }
+            \end{column}
+        \end{columns}
+        
+        \end{minipage}
+        
+    \end{frame}
+    
     
 
 \end{document}
