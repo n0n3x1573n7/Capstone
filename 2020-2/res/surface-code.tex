@@ -205,6 +205,8 @@
                     \begin{itemize}
                         \item Measurement qubits either measures $ \shat{X} $ or $ \shat{Z} $ stabilizer (i.e., $ \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d} $ or $ \sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d} $)
                         \item Figure (b) and (c) represents the quantum circuit of stabilizer measurement
+                        \item For any adjacent data qubits with state $ \ket{\psi} $, $ \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d}\ket{\psi} = X_{abcd}\ket{\psi } $ holds.
+                        \item After measurement, the cycle is repeated (to negate the effects)
                     \end{itemize}
                 }
             \end{column}
@@ -214,6 +216,82 @@
         
     \end{frame}
     
+
+    \subsection{Quinscent State}
+    \begin{frame}{Surface code structure}
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-overview.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                    \begin{itemize}
+                    \item The techniques used to apply $ \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d} $ and $ \sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d} $ are somewhat standard, but is surely crucial.
+                    \item On (b), identity matrix is included in measure-Z to minimize error and match timing with measure-X.
+                    \end{itemize}
+            \end{column}
+        \end{columns}
+        
+        \end{minipage}
+        
+    \end{frame}
+    \begin{frame}{Quinscent state}
+        \begin{itemize}
+            \item The forementions state $ \ket{\psi} $ is not the ground state $ \ket{g} $
+            \item Instead it is determined by its eigenvectors
+            \item The data qubits are projected to these states
+            \item They are not fully entangled to all of the qubits, but are locally entangled
+        \end{itemize}
+    \end{frame}
     
+    %
+    \subsection{Single-qubit Errors}
+    \begin{frame}{Single-qubit error in a nutshell}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[height=0.8\textheight]{./Images/surf-code-single-error.jpg}
+        \end{figure}
+    \end{frame}
+    
+    \begin{frame}{Single phase-flip error}
+        Consider a random $ \shat{Z} $ phase-flip error $ \sshat{I_a} + \epsilon \sshat{Z_a} $ where $ \lvert\epsilon\rvert \ll 1 $. Let $ \ket{\psi'} \to (\sshat{I_a} + \epsilon \sshat{Z_a}) \ket{\psi} $, then $ \ket{\psi'} = \sshat{Z_a}\ket{\psi} $ with probability $ \lvert\epsilon\rvert^2 $.
+        \begin{equation}
+        \begin{split}
+       \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d}(\sshat{Z_a} \ket{\psi}) &= -\sshat{Z_a}(\sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d}\ket{\psi}) \\
+       &= -\sshat{Z_a}X_{abcd}\ket{\psi}
+        \end{split}
+        \end{equation}
+        Thus, a single $ \shat{Z} $ phase-flip error can be detected by measure-X with any info loss since $ \ket{\psi} $ is the eigenstate of stabilizers $ \sshat{X_a}\sshat{X_b}\sshat{X_c}\sshat{X_d} $ and $ \sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d} $. However, it will not change the result of measure-Z.
+        \begin{equation}
+        \begin{split}
+       \sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d}(\sshat{Z_a} \ket{\psi}) &= \sshat{Z_a}(\sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d}\ket{\psi}) \\
+       &= \sshat{Z_a}Z_{abcd}\ket{\psi}
+        \end{split}
+        \end{equation}
+    \end{frame}
+    
+    \begin{frame}{Other errors}
+        \begin{itemize}
+            \item We can apply $ \sshat{Z_a} $ to negate this error, but applying another quantum operator may yield other errors
+            \item Marking that the qubit is phase-flipped by software is better
+            \item Similarly, a single $ \shat{X} $ bit-flip error can be detected by measure-Z.
+        \end{itemize}
+        Measurement can also yield errors, which has to be considered.
+        \begin{itemize}
+            \item However, it is very unlikely to happen twice in a row or more
+            \item Even so, several measurements are required to ensure the result
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{Single-qubit error in a nutshell (recap)}
+        \begin{figure}[h]
+            \centering
+            \includegraphics[height=0.7\textheight]{./Images/surf-code-single-error.jpg}
+        \end{figure}
+        Vertical heavy lines indicate each errors
+    \end{frame}
 
 \end{document}
