@@ -293,5 +293,89 @@
         \end{figure}
         Vertical heavy lines indicate each errors
     \end{frame}
+    
+    \subsection{Logical Operators}
+    \begin{frame}{Logical operators in a nutshell}
+        \begin{figure}
+            \centering
+            \includegraphics[height=0.6\textheight]{./Images/surf-code-logical.jpg}
+        \end{figure}
+        $ \sshat{X_L} $ and $ \sshat{Z_L} $ can manipulate qubits without altering the measurement results.
+    \end{frame}
+
+    \begin{frame}{9 by 9 surface code}
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[t]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-logical.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                \begin{itemize}
+                \item This 9 by 9 surface code contains 41 data qubits and 40 measurement qubits
+                \begin{itemize}
+                    \item Thus there are 2 $ \times $ 41 degrees of   freedom and 2 $ \times $ 40 constraints with the stabilizer
+                    \item All of these constraints are linearly independent
+                \end{itemize}
+                \item Where are the remaining two unconstrained degrees of freedom? How can we manipulate those?
+                \end{itemize}
+            \end{column}
+        \end{columns}
+        \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{9 by 9 surface code}
+        \begin{itemize}
+            \item A single data qubit $ \shat{X} $ operation only alters the measure-Z outcomes on either side
+            \begin{itemize}
+                \item As mentioned, all $ \sshat{X_i} $ operations mutually commute.
+            \end{itemize}
+            \item However, two simultaneous $ \shat{X} $ operations on two data qubits $ a $ and $ b $ that both neighbor the same measure-$ Z $ qubit commutes with the $ \shat{Z} $ stabilizer
+            \item As a formula, $ [\sshat{Z_a}\sshat{Z_b}\sshat{Z_c}\sshat{Z_d}, \sshat{X_a}\sshat{X_b}] = 0$.
+        \end{itemize}
+    \end{frame}
+    
+    \begin{frame}{9 by 9 surface code}
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[t]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-logical.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                \begin{itemize}
+                \item We first apply $ \sshat{X_1} $. To negate the measure-Z, we also apply $ \sshat{X_2} $, and so on.
+                \item Thus, $ \sshat{X_L} = \sshat{X_1}\sshat{X_2}\sshat{X_3}\sshat{X_4}\sshat{X_5} $ commutes with any stabilizer.
+                \item $ \ket{\psi_X} = \sshat{X_L} \ket{\psi} $ is different from $ \ket{\psi} $, but its measurement will yield $ \ket{\psi} $.
+                \end{itemize}
+            \end{column}
+        \end{columns}
+        \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{9 by 9 surface code}
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[t]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-logical.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                \begin{itemize}
+                \item Since $ \sshat{X_L} $ cannot be written as a product of stabilizers, this operator manipulates one of the unconstrained degrees of freedom.
+                \item Similarly $ \sshat{Z_L} = \sshat{X_6}\sshat{X_7}\sshat{X_3}\sshat{X_8}\sshat{X_9}$ manipulates the other degree of freedom.
+                \item Are there any other methods to manipulate unconstrained degrees of freedom other than $ \sshat{X_L} $ and $ \sshat{Z_L} $? No!
+                \end{itemize}
+            \end{column}
+        \end{columns}
+        \end{minipage}
+    \end{frame}
+    
 
 \end{document}
