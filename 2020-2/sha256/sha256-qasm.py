@@ -1,3 +1,6 @@
+import sys
+sys.stdout = open('sha256-qasm.qc', 'w')
+
 import string
 # help
 

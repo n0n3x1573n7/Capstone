@@ -148,5 +148,5 @@ class SHA256:
 		s.hexdigest()
 		return s.digest
 
-#print(SHA256.digest("", debug=True))#actual hash calculation, with debug strings
-print(SHA256.digest_without_pad('8'+"0"*127))#no padding is done; only accepts hexstring having length of which is multiple of 128(i.e. 512 bytes)
+print(SHA256.digest("", debug=True))#actual hash calculation, with debug strings
+#print(SHA256.digest_without_pad('8'+"0"*127))#no padding is done; only accepts hexstring having length of which is multiple of 128(i.e. 512 bytes)
