@@ -1,5 +1,5 @@
 import sys
-sys.stdout = open('sha256-qasm.qc', 'w')
+sys.stdout = open('sha256-qasm.qasm', 'w')
 
 import string
 # help
@@ -27,19 +27,14 @@ round_const=('428a2f98', '71374491', 'b5c0fbcf', 'e9b5dba5', '3956c25b', '59f111
              '19a4c116', '1e376c08', '2748774c', '34b0bcb5', '391c0cb3', '4ed8aa4a', '5b9cca4f', '682e6ff3',
              '748f82ee', '78a5636f', '84c87814', '8cc70208', '90befffa', 'a4506ceb', 'bef9a3f7', 'c67178f2',)
 
-def var(pre, num=None):
-    if num == None:
-        return pre
-    return pre + str(num).rjust(2, '0')
-
 g_ch = '''
 gate ch a,b,c,r
 {
-    cx c,res;
+    cx c,r;
     cx b,c;
     ccx a,c,r;
 }
-gate ch_a a,b,c,r
+gate cha a,b,c,r
 {
     ccx a,c,r;
     cx b,c;
@@ -53,7 +48,7 @@ gate majr a,b,c,r
     cx a,b;
     ccx b,c,r;
 }
-gate majr_a a,b,c,r
+gate majra a,b,c,r
 {
     ccx b,c,r;
     cx a,b;
@@ -164,13 +159,13 @@ def q_ch(a, b, c, d):
     print(f'ch {a},{b},{c},{d};')
 
 def q_ch_a(a, b, c, d):
-    print(f'ch_a {a},{b},{c},{d};')
+    print(f'cha {a},{b},{c},{d};')
 
 def q_majr(a, b, c, r):
     print(f'majr {a},{b},{c},{r};')
 
 def q_majr_a(a, b, c, r):
-    print(f'majr_a {a},{b},{c},{r};')
+    print(f'majra {a},{b},{c},{r};')
 
 def prepare():
     print('''OPENQASM 2.0;
