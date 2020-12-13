@@ -18,7 +18,7 @@
 \begin{document}
 
     \subsection{Background}
-    \begin{frame}{Surface code and physical qubits}
+    \begin{frame}{SHA-256 Algorithm}
         This summary is heavily based on \cite{Fowler_2012}.
         \begin{itemize}
             \item Surface code is a method to construct \textit{logical} qubits from physical qubits with acceptable relativce error tolerance \cite{calderbank1997quantum}
@@ -369,12 +369,48 @@
             \begin{column}{0.6\textwidth}
                 \begin{itemize}
                 \item Since $ \sshat{X_L} $ cannot be written as a product of stabilizers, this operator manipulates one of the unconstrained degrees of freedom.
-                \item Similarly $ \sshat{Z_L} = \sshat{X_6}\sshat{X_7}\sshat{X_3}\sshat{X_8}\sshat{X_9}$ manipulates the other degree of freedom.
+                \item Similarly $ \sshat{Z_L} = \sshat{Z_6}\sshat{Z_7}\sshat{Z_3}\sshat{Z_8}\sshat{Z_9}$ manipulates the other degree of freedom.
                 \item Are there any other methods to manipulate unconstrained degrees of freedom other than $ \sshat{X_L} $ and $ \sshat{Z_L} $? No!
                 \end{itemize}
             \end{column}
         \end{columns}
         \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{9 by 9 surface code}
+        \begin{minipage}[0.65\textheight]{\textwidth}
+        \begin{columns}[T]
+            \begin{column}{0.4\textwidth}
+                \begin{figure}[t]
+                    \centering
+                    \includegraphics[height=0.6\textheight]{./Images/surf-code-logical.jpg}
+                \end{figure}
+            \end{column}
+            \begin{column}{0.6\textwidth}
+                \begin{itemize}
+                \item Consider $ \sshat{X'_L} = \sshat{X_1}\shat{X_{10}}\sshat{X_{11}}\sshat{X_{12}}\sshat{X_3}\sshat{X_4}\sshat{X_5} $
+                \item It might be a new chain, but is actually $ (\sshat{X_2}\shat{X_{10}}\sshat{X_{11}}\sshat{X_{12}})\sshat{X_L} $.
+                \begin{itemize}
+                    \item Since it is merely a product of $ \sshat{X_L}  $ and a stabilizer 
+                \end{itemize}
+                \item The same is applied to $ \sshat{Z_L} $; therefore there are no linearly independent operators other than $ \sshat{X_L} $ and $ \sshat{Z_L} $.
+                \end{itemize}
+            \end{column}
+        \end{columns}
+        \end{minipage}
+    \end{frame}
+    
+    \begin{frame}{9 by 9 surface code : Conclusion}
+        \begin{itemize}
+            \item Thus quinscent state $ \ket{\psi} $ can be written as $ \ket{Q}\ket{q_L} $
+            \begin{itemize}
+                \item $ \ket{Q} $ is the vector of $ 2^N $-dimensional Hilbert space by $ N $ stabilizer measurements
+                \item $ \ket{q_L} $ is a vector of $ 2 $-dimensional Hilbert space, representing unconstrained degrees of freedom
+            \end{itemize}
+            \item Stabilizers only affect $ \ket{Q} $ while $ \sshat{X_L} $ and $ \sshat{Z_L} $ only affect $ \ket{q_L} $
+            \item Therefore a single logical qubit is constructed.
+        \end{itemize}
+        How to create more degrees of freedom?
     \end{frame}
     
 
