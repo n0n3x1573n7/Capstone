@@ -16,8 +16,6 @@
 \usepackage{tikz}
 
 \begin{document}
-
-    \subsection{Background}
     \begin{frame}{SHA-256 Algorithm}
         \begin{figure}[h]
             \centering
@@ -116,7 +114,7 @@
         \end{itemize}
     \end{frame}    
     
-    \begin{frame}{Analysis}
+    \begin{frame}{Results}
     
         \begin{table}[h]
         \small
@@ -135,8 +133,37 @@
         `1r' and `2r' denotes 1 round per code and 2 rounds per code, respectively.
     \end{frame}
     
+    \begin{frame}{Analysis: Incomplete Business}
+    	Three strange discrepancies...
+    	\begin{itemize}
+    		\item Gate differences of na\"ive ones
+    		\item Smaller decrement of $T$-gate
+    		\item Increased $CNOT$ gate when applied 2 rounds per code compared to 1 rounds of code
+    	\end{itemize}
+    \end{frame}
     
-    
-    
-
+    \begin{frame}{Analysis: Na\"ive Gate Difference}
+    	Why did the Na\"ive gate differ?
+    	\begin{itemize}
+    		\item Different way of implementation
+    		\item Specifically, we utilized $X$-gates; the literature did not.
+    		\begin{itemize}
+    			\item The reason for non-utilization is unknown
+    		\end{itemize}
+    		\item The overall gate would have decreased due to the usage of $X$-gates, but its difference is too large.
+    	\end{itemize}
+    \end{frame}
+  	
+  	\begin{frame}{Analysis: $T$-gate and $CNOT$-gate Discrepancies}
+  		Why did $T$-gate decrease less, even after considering the reduced gate count?
+  		
+  		In the 2r case, the number of $CNOT$ gates decreased less than 1r case. Why?
+  		\begin{itemize}
+  			\item Cannot be sure
+  			\item Possibility 1: Our implementation of SHA is wrong
+  			\item[$\Rightarrow$] Possible, since we couldn't test it, but even after we searched for incorrect result multiple times in the source and its generator, we couldn't find the error.
+  			\item Possibility 2: The software we used is wrong or is only partially implemented
+  			\item[$\Rightarrow$] Possible, and most probable due to the $CNOT$ gate discrepancy.
+  		\end{itemize}
+  	\end{frame}
 \end{document}
